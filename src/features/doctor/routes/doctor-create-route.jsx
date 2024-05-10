@@ -1,8 +1,8 @@
+import queryClient from "@/lib/react-query";
 import { useState } from "react";
-import { useCreateDoctor } from "../../api/DoctorApi";
-import queryClient from "../../lib/react-query";
+import { useCreateDoctor } from "../api/create-doctor-api";
 
-const DoctorCreatePage = () => {
+const DoctorCreateRoute = () => {
       const [doctorInputValue, setDoctorInputValue] = useState({});
       const doctorMutation = useCreateDoctor();
       const inputStyle = "border border-black mt-5 w-80 h-14 p-4 rounded border-slate-800";
@@ -15,7 +15,7 @@ const DoctorCreatePage = () => {
             doctorMutation.mutate(doctorInputValue, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
-                              queryKey: ['']
+                              queryKey: ['doctors']
                         })
                   }
             })
@@ -33,4 +33,4 @@ const DoctorCreatePage = () => {
             </div>
       )
 };
-export default DoctorCreatePage;
+export default DoctorCreateRoute;

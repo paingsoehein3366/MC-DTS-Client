@@ -57,7 +57,7 @@ const invoices = [
       },
 ];
 
-const DoctorSpecialLifePage = () => {
+const DoctorSpecialLifeRoute = () => {
       const navigate = useNavigate();
       const tableHeadStyle = "text-center text-base "
       return (
@@ -85,4 +85,4 @@ const DoctorSpecialLifePage = () => {
       )
 };
 ;
-export default DoctorSpecialLifePage;
+export default DoctorSpecialLifeRoute;

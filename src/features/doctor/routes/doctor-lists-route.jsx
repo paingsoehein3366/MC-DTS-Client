@@ -56,7 +56,7 @@ const invoices = [
       },
 ];
 
-const DoctorListPage = () => {
+const DoctorListRoute = () => {
       const navigate = useNavigate();
       const tableHeadStyle = "text-center text-base "
       return (
@@ -68,7 +68,7 @@ const DoctorListPage = () => {
                               <TableHead className={tableHeadStyle}>Name</TableHead>
                               <TableHead className={tableHeadStyle}>Email</TableHead>
                               <TableHead className={tableHeadStyle}>Experience</TableHead>
-                              <TableHead className="text-center text-base">Special Life</TableHead>
+                              <TableHead className="text-center text-base">Special List</TableHead>
                         </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -78,7 +78,7 @@ const DoctorListPage = () => {
                                     <TableCell>{invoice.Email}</TableCell>
                                     <TableCell>{invoice.SpecialLife}</TableCell>
                                     <Button
-                                          onClick={() => navigate(`special-life`)}
+                                          onClick={() => navigate(`doctor-slot`)}
                                           className="rounded bg-[#0a95a5] text-[#fff] my-1.5 hover:bg-[#0dc2d6] active:bg-[#0a95a5]"
                                     >Action</Button>
                               </TableRow>
@@ -87,4 +87,4 @@ const DoctorListPage = () => {
             </Table>
       )
 };
-export default DoctorListPage;
+export default DoctorListRoute;
