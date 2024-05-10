@@ -1,12 +1,8 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom'
-import App from './App.jsx'
 import './index.css'
-import DoctorCreatePage from './features/doctor/routes/doctor-create-route.jsx'
+import router from './router/index.jsx'
+import { RouterProvider } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <RouterProvider router={router} />
 )
