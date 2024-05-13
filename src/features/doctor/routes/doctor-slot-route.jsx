@@ -22,11 +22,6 @@ const DoctorSpecialLifeRoute = () => {
       </TableHeader>
       <TableBody>
         <TableRow>
-          {/* <TableCell>AM 9:00 --- 10:00</TableCell>
-                              <TableCell>AM 9:00 --- 10:00</TableCell>
-                              <TableCell>AM 9:00 --- 10:00</TableCell>
-                              <TableCell>AM 9:00 --- 10:00</TableCell>
-                              <TableCell>AM 9:00 --- 10:00</TableCell> */}
         </TableRow>
       </TableBody>
     </Table>
