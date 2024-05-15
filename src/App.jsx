@@ -1,21 +1,19 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-import DoctorCreatePage from './features/doctor/routes/doctor-create-route';
-import { QueryClientProvider } from 'react-query';
-import queryClient from './lib/react-query';
-import Router from './router';
+import { QueryClientProvider } from "react-query";
+import queryClient from "./lib/react-query";
+import { Outlet } from "react-router-dom";
+import { Header } from "./components";
 
 function App() {
-
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Router/>
+        <div className="max-w-7xl mx-auto px-4">
+          <Header />
+          <Outlet />
+        </div>
       </QueryClientProvider>
     </>
-  )
-};
+  );
+}
 
 export default App;
