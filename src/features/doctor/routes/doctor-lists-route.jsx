@@ -1,13 +1,15 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import Female from "../../../assets/famale.png"
 
 const DoctorListRoute = () => {
-	const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	return (
-		<div className="grid grid-cols-5 gap-3">
+		<>
+			<div className="grid grid-cols-5 gap-3">
 			{lists.map((list, index) => (
 				<Card key={index}>
-					<CardHeader className="bg-red-500">
+					<CardHeader className="">
 						<img
 							className=""
 							src="https://static.vecteezy.com/system/resources/previews/004/831/677/original/doctor-male-avatar-character-icon-free-vector.jpg"
@@ -25,6 +27,8 @@ const DoctorListRoute = () => {
 				</Card>
 			))}
 		</div>
+		
+		</>
 	);
 };
 export default DoctorListRoute;
