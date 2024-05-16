@@ -50,14 +50,14 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
             const endDate = new Date(setHourEndTime).toISOString();
             const data = { name: appointmentData.name, email: appointmentData.email, doctor: appointmentData.doctor, phone: appointmentData.phone, startDate, endDate, comments: appointmentData.comments }
             console.log("data: ", data);
-            createMutation.mutate(data, {
-                  onSuccess: () => {
-                        setOpen()
-                  },
-                  onError: (error) => {
-                        window.alert(error)
-                  }
-            })
+            // createMutation.mutate(data, {
+            //       onSuccess: () => {
+            //             setOpen()
+            //       },
+            //       onError: (error) => {
+            //             window.alert(error)
+            //       }
+            // })
       };
       return (
             <Dialog open={open} onOpenChange={setOpen} >
