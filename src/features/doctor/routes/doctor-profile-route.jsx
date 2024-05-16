@@ -44,6 +44,7 @@ const DoctorProfileRoute = () => {
                 Setting
               </button>
             </div>
+            
             {toggle === "slot" && (
               <div className="mt-4">
                 <div className="flex justify-end my-2">
