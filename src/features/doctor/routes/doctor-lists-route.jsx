@@ -2,6 +2,7 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 const DoctorListRoute = () => {
+
   const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
     <div className="grid grid-cols-5 gap-3">
@@ -26,5 +27,6 @@ const DoctorListRoute = () => {
       ))}
     </div>
   );
+
 };
 export default DoctorListRoute;
