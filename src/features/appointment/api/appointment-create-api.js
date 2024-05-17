@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/axios"
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export const appointmentCreate = async ({ data }) => {
       await fetcher.post('/appointment/create', data).then(res => {

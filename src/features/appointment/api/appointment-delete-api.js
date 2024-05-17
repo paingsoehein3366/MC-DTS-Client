@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/axios"
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export const appointmentDelete = async (id) => {
       await fetcher.delete('/appointment/delete', id).then(res => {

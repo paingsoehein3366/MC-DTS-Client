@@ -9,15 +9,15 @@ const SlotCreate = () => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
       const [open, setOpen] = useState(false);
       const [showDatePicker, setShowDatePicker] = useState('hidden');
-      const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: "6" });
+      const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: 6 });
       const slot = [1, 2, 3, 4, 5, 6, 7, 8];
       const datePickShow = () => {
             if (showDatePicker === 'inline' && !dateAndTimeData.date && !dateAndTimeData.startTime) {
                   setShowDatePicker('hidden');
-                  setAddButtonStyle({ justify: "end", marginLeft: "6" });
+                  setAddButtonStyle({ justify: "end", marginLeft: 6 });
             } else {
                   setShowDatePicker('inline');
-                  setAddButtonStyle({ justify: 'around', marginLeft: "0" })
+                  setAddButtonStyle({ justify: 'around', marginLeft: 0 })
             }
             const { message, key } = slotCreateValidate(dateAndTimeData)
             console.log("message: ", message, ", key: ", key);

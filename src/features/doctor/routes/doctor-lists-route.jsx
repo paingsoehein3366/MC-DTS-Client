@@ -4,32 +4,31 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetAllDoctors } from "../api/get-all-doctors-api";
 import DoctorCreateRoute from "./doctor-create-route";
+import Male from "../../../assets/male.jpeg";
+import Female from "../../../assets/female.jpeg";
 const DoctorListRoute = () => {
-  
+
+
+  // const { data: lsts, isLoading, error } = useGetAllDoctors();
   const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
   const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  // const { data } = useGetAllDoctors();
-  // console.log("data: ", data.data);
+
   return (
     <div>
       <div className="flex justify-end mb-5">
         <Button onClick={() => setOpenCreateDoctor(true)} className="border rounded-[7px] bg-blue-500 text-white hover:bg-blue-700">Add New Doctor</Button>
       </div>
       <div className="grid grid-cols-5 gap-3">
-        {lists.map((list, index) => (
-          <Card key={index}>
+        {lists && lists?.map(doctor => (
+          <Card key={doctor?._id}>
             <CardHeader className="">
-              <img
-                className=""
-                src="https://static.vecteezy.com/system/resources/previews/004/831/677/original/doctor-male-avatar-character-icon-free-vector.jpg"
-                alt=""
-              />
+              <img src={`${doctor.gender === "Male" ? Male : Female}`} alt="" />
             </CardHeader>
             <Link to="/doctor/profile">
-              <CardFooter className="hover:bg-blue-500 py-4 transition-all duration-500 cursor-pointer hover:text-white">
-                <div className="text-center">
-                  <p className="font-bold text-lg">Dr. Calvin Calo</p>
-                  <p className="">Eye Care</p>
+              <CardFooter className="hover:bg-blue-500 py-4 transition-all duration-500 cursor-pointer hover:text-white flex justify-center">
+                <div className="flex flex-col items-center">
+                  <p className="font-bold text-lg">{doctor.name}</p>
+                  <p className="">{doctor.specialist}</p>
                 </div>
               </CardFooter>
             </Link>
