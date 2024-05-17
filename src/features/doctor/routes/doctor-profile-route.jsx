@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import SlotCreate from "../components/slot-create";
 
 const DoctorProfileRoute = () => {
   const [toggle, setToggle] = useState("slot");
@@ -29,23 +30,22 @@ const DoctorProfileRoute = () => {
             <div className="flex gap-4 border-b-2 pb-2">
               <button
                 onClick={() => setToggle("slot")}
-                className={`${button} ${
-                  toggle === "slot" && "bg-blue-500 text-white"
-                }`}
+                className={`${button} ${toggle === "slot" && "bg-blue-500 text-white"
+                  }`}
               >
                 Time Slots
               </button>
               <button
                 onClick={() => setToggle("setting")}
-                className={`${button} ${
-                  toggle === "setting" && "bg-blue-500 text-white"
-                }`}
+                className={`${button} ${toggle === "setting" && "bg-blue-500 text-white"
+                  }`}
               >
                 Setting
               </button>
             </div>
-            
-            {toggle === "slot" && (
+
+            <SlotCreate />
+            {/* {toggle === "slot" && (
               <div className="mt-4">
                 <div className="flex justify-end my-2">
                   <button className="py-2 px-4 bg-blue-500 text-white rounded-xl">
@@ -81,7 +81,7 @@ const DoctorProfileRoute = () => {
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </Card>

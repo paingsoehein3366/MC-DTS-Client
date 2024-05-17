@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetAllDoctors } from "../api/get-all-doctors-api";
 import DoctorCreateRoute from "./doctor-create-route";
 const DoctorListRoute = () => {
   const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
   const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // const { data } = useGetAllDoctors();
+  // console.log("data: ", data.data);
   return (
     <div>
       <div className="flex justify-end mb-5">
