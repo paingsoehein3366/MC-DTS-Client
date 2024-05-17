@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useGetAllDoctors } from "../api/get-all-doctors-api";
 import DoctorCreateRoute from "./doctor-create-route";
 const DoctorListRoute = () => {
+  
   const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
   const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   // const { data } = useGetAllDoctors();
