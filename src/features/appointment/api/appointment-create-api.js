@@ -1,14 +1,14 @@
 import { fetcher } from "@/lib/axios"
 import { useMutation } from "react-query";
 
-export const createAppointment = async ({ data }) => {
+export const appointmentCreate = async ({ data }) => {
       await fetcher.post('/appointment/create', data).then(res => {
             return res.data;
       }).catch(err => console.log(err))
 };
 
-export const useCreateAppointment = () => {
+export const useAppointmentCreate = () => {
       useMutation({
-            mutationFn: createAppointment,
+            mutationFn: appointmentCreate,
       })
 };
