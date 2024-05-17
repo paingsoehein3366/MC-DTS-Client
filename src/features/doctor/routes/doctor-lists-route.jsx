@@ -2,22 +2,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import DoctorCreateRoute from "./doctor-create-route";
 import { useGetAllDoctors } from "../api/get-all-doctors-api";
+import DoctorCreateRoute from "./doctor-create-route";
 import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
 const DoctorListRoute = () => {
-  
-  
-  const { data: lists, isLoading, error } = useGetAllDoctors();
+
+
+  // const { data: lsts, isLoading, error } = useGetAllDoctors();
   const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
+  const lists = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
   return (
     <div>
       <div className="flex justify-end mb-5">
         <Button onClick={() => setOpenCreateDoctor(true)} className="border rounded-[7px] bg-blue-500 text-white hover:bg-blue-700">Add New Doctor</Button>
       </div>
       <div className="grid grid-cols-5 gap-3">
-        {lists && lists?.data.map(doctor => (
+        {lists && lists?.map(doctor => (
           <Card key={doctor?._id}>
             <CardHeader className="">
               <img src={`${doctor.gender === "Male" ? Male : Female}`} alt="" />
