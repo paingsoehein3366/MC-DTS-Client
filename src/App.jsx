@@ -1,7 +1,7 @@
-import { QueryClientProvider } from "react-query";
-import queryClient from "./lib/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 import { Header } from "./components";
+import { queryClient } from "./lib/react-query";
 
 function App() {
   return (

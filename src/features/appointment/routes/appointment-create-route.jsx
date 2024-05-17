@@ -16,7 +16,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { useAppointmentCreate } from '../api';
+// import { useAppointmentCreate } from '../api';
 import { createAppointmentValidate } from '../schema/appointment-create-schema';
 
 const AppointmentCreateRoute = ({ open, setOpen }) => {
@@ -31,7 +31,7 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
             gender: ""
       });
       const [errorMessage, setErrorMessage] = useState({})
-      const createMutation = useAppointmentCreate();
+      // const createMutation = useAppointmentCreate();
 
       const inputStyle = "border border-gray-300 w-48 h-10 px-3 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-500";
       const inputContainer = "flex flex-col";

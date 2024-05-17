@@ -1,14 +1,14 @@
 import { fetcher } from "@/lib/axios";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
-export const createDoctor = async (data) => {
-      await fetcher.post('/doctor/create', data).then(res => {
-            return res.data;
-      })
+const createDoctor = async (data) => {
+      const createData = await fetcher.post('/doctors', data)
+
+      return createData;
 };
 
 export const useCreateDoctor = () => {
-      useMutation({
-            mutationFn: createDoctor,
-      })
-};
+    return useMutation({
+        mutationFn: createDoctor
+    })
+}
