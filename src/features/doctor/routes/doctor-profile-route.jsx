@@ -1,12 +1,17 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import SlotCreate from "../components/slot-create";
+import { useParams } from "react-router-dom";
+import { useGetDoctor } from "../api/doctor-profile-api";
 
 const DoctorProfileRoute = () => {
   const [toggle, setToggle] = useState("slot");
   const button = "py-2 px-4 rounded-xl border";
+  const {doctorId} = useParams()
 
-  const slots = [1, 2, 3, 4, 5, 6, 7];
+  const { data: doctor, isLoading } = useGetDoctor(doctorId)
+  console.log(doctor);
+
   return (
     <div>
       <Card>
@@ -20,10 +25,10 @@ const DoctorProfileRoute = () => {
               />
             </div>
             <div className="space-y-3">
-              <h1 className="">Name - Dr. Hello</h1>
-              <h1 className="">Specialist - Eye</h1>
-              <h1 className="">Experiences - 3 years</h1>
-              <h1 className="">Gender - Male</h1>
+              <h1 className="">Name - {doctor?.data.name}</h1>
+              <h1 className="">Specialist - {doctor?.data.specialist}</h1>
+              <h1 className="">Experiences - {doctor?.data.experience} years</h1>
+              <h1 className="">Gender - {doctor?.data.gender}</h1>
             </div>
           </div>
           <div className="">
@@ -45,43 +50,7 @@ const DoctorProfileRoute = () => {
             </div>
 
             <SlotCreate />
-            {/* {toggle === "slot" && (
-              <div className="mt-4">
-                <div className="flex justify-end my-2">
-                  <button className="py-2 px-4 bg-blue-500 text-white rounded-xl">
-                    Add Slot
-                  </button>
-                </div>
-                {slots.map((slot, i) => (
-                  <div className="flex justify-between py-4" key={i}>
-                    <div className="flex gap-2">
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-6 h-6 text-blue-500"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                          />
-                        </svg>
-                      </span>
-                      <h1 className="">Monday</h1>
-                    </div>
-                    <div className="">
-                      <p className="">
-                        Time: <span>8:00 - 20:00</span>
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )} */}
+            
           </div>
         </div>
       </Card>

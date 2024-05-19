@@ -1,6 +1,5 @@
 import { fetcher } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/lib/axios";
 
 export const getAllDoctors = async () => {
       const { data } = await fetcher.get('/doctors');
@@ -9,7 +8,7 @@ export const getAllDoctors = async () => {
 
 export const useGetAllDoctors = () => {
       return useQuery({
-            queryKey: ['doctors'],
+            queryKey: ['get-all-doctors'],
             queryFn: () => getAllDoctors()
       })
 };
