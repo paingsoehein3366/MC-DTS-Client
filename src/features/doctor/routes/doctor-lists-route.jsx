@@ -2,19 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import DoctorCreateRoute from "./doctor-create-route";
 import { useGetAllDoctors } from "../api/get-all-doctors-api";
+import DoctorCreateRoute from "./doctor-create-route";
 import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
+import { Loading } from "@/components";
+
 const DoctorListRoute = () => {
 	const { data: lists, isLoading, error } = useGetAllDoctors();
 	const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
-	console.log("Doctors List=> ", lists?.data);
 
-	
-	if (isLoading) return <p>Loading...</p>;
-	if (error) return <p>Error loading doctors</p>;
-	console.log();
 	return (
 		<div>
 			<div className="flex justify-end mb-5">
@@ -25,6 +22,9 @@ const DoctorListRoute = () => {
 					Add New Doctor
 				</Button>
 			</div>
+			{isLoading && (
+        <Loading />
+			)}
 			<div className="grid grid-cols-5 gap-3">
 				{lists &&
 					lists?.data.map((doctor) => (
@@ -35,20 +35,17 @@ const DoctorListRoute = () => {
 									alt=""
 								/>
 							</CardHeader>
-							<CardFooter className="hover:bg-blue-500 py-4 transition-all duration-500 cursor-pointer hover:text-white flex justify-center">
-								<Link to="/doctor/profile">
+							<Link to={`/${doctor._id}/profile`}>
+								<CardFooter className="hover:bg-blue-500 py-4 transition-all duration-500 cursor-pointer hover:text-white flex justify-center">
 									<div className="flex flex-col items-center">
-										<p className="font-bold text-red-500 text-lg">
-											{doctor.name}
-										</p>
-										<p className="">{doctor?.specialist}</p>
+										<p className="font-bold text-lg">{doctor.name}</p>
+										<p className="">{doctor.specialist}</p>
 									</div>
-								</Link>
-							</CardFooter>
+								</CardFooter>
+							</Link>
 						</Card>
 					))}
 			</div>
-
 			<DoctorCreateRoute
 				open={openCreateDoctor}
 				setOpen={() => setOpenCreateDoctor(false)}
