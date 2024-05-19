@@ -22,19 +22,20 @@ const DoctorListRoute = () => {
 					Add New Doctor
 				</Button>
 			</div>
-			{isLoading && (
-        <Loading />
-			)}
+			{isLoading && <Loading />}
 			<div className="grid grid-cols-5 gap-3">
 				{lists &&
 					lists?.data.map((doctor) => (
 						<Card key={doctor._id}>
-							<CardHeader className="">
+							<div className=" flex justify-center items-center">
+								<div className="circle">
+
 								<img
 									src={`${doctor.gender === "Male" ? Male : Female}`}
 									alt=""
 								/>
-							</CardHeader>
+								</div>
+							</div>
 							<Link to={`/${doctor._id}/profile`}>
 								<CardFooter className="hover:bg-blue-500 py-4 transition-all duration-500 cursor-pointer hover:text-white flex justify-center">
 									<div className="flex flex-col items-center">
