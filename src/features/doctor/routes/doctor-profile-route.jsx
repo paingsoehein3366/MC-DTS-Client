@@ -1,12 +1,22 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import SlotCreate from "../components/slot-create";
+import { useGetDoctorSlot } from '../api/get-doctor-slot-api';
 
 const DoctorProfileRoute = () => {
+  const paramsId = useParams().doctorId;
+
   const [toggle, setToggle] = useState("slot");
   const button = "py-2 px-4 rounded-xl border";
 
-  const slots = [1, 2, 3, 4, 5, 6, 7];
+  const { data, isError, error } = useGetDoctorSlot(paramsId);
+  if (isError) {
+    return <h1>{error.message}</h1>
+  }
+  const DoctorValue = data?.data;
+  console.log(DoctorValue);
+  const slots = data?.data?.slots;
   return (
     <div>
       <Card>
@@ -20,10 +30,10 @@ const DoctorProfileRoute = () => {
               />
             </div>
             <div className="space-y-3">
-              <h1 className="">Name - Dr. Hello</h1>
-              <h1 className="">Specialist - Eye</h1>
-              <h1 className="">Experiences - 3 years</h1>
-              <h1 className="">Gender - Male</h1>
+              <h1 className="">Name - {DoctorValue?.name}</h1>
+              <h1 className="">Specialist - {DoctorValue?.specialist}</h1>
+              <h1 className="">Experiences - {DoctorValue?.experiences}</h1>
+              <h1 className="">Gender - {DoctorValue?.gender}</h1>
             </div>
           </div>
           <div className="">
@@ -44,7 +54,7 @@ const DoctorProfileRoute = () => {
               </button>
             </div>
 
-            <SlotCreate />
+            <SlotCreate slots={slots} doctorId={paramsId} />
             {/* {toggle === "slot" && (
               <div className="mt-4">
                 <div className="flex justify-end my-2">
