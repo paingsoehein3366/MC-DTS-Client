@@ -6,12 +6,26 @@ import { slotCreateValidate } from '../schema/slot-create-schema';
 import SlotEdit from './slot-edit';
 import { useSlotCreate } from '../api/create-slot-api';
 import { queryClient } from '@/lib/react-query';
+import {
+      Table,
+      TableBody,
+      TableCell,
+      TableHead,
+      TableHeader,
+      TableRow,
+} from "@/components/ui/table";
+import EditIcon from './edit-icon';
+import DeleteIcon from '@/features/appointment/components/delete-icon';
+import SlotRemove from './slot-remove';
 
 const SlotCreate = ({ slots, doctorId }) => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
-      console.log("dateAndTimeDat: ", dateAndTimeData);
+      const [editSlot, setEditSlot] = useState({});
+      const [removeSlot, setRemoveSlot] = useState({});
+      const [allSlots, setAllSlots] = useState([]);
       const [searchSlot, setSearchSlot] = useState('');
       const [open, setOpen] = useState(false);
+      const [openRemove, setOpenRemove] = useState(false);
       const [showDatePicker, setShowDatePicker] = useState('hidden');
       const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: 6 });
 
@@ -46,14 +60,12 @@ const SlotCreate = ({ slots, doctorId }) => {
                         + ':' +
                         (getEndMinutes < 10 ? '0' + getEndMinutes.toString() : getEndMinutes),
 
-                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
+                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2]) + 1),
                   id: item._id
             }
       });
-      console.log("Iso", getSlot);
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
-      console.log("checkDate: ", checkDate);
 
       // Add Slot
       const AddSlot = () => {
@@ -65,14 +77,11 @@ const SlotCreate = ({ slots, doctorId }) => {
                   setAddButtonStyle({ justify: 'around', marginLeft: 0 })
             };
             const { message, key } = slotCreateValidate(dateAndTimeData);
-            console.log("message: ", message, ", key: ", key);
             const setHourStartTime = new Date(dateAndTimeData.date).setHours(startHour, startMinute)
-            console.log("setHourStartTime: ", setHourStartTime);
             const start_date = new Date(setHourStartTime).toISOString();
             const setHourEndTime = new Date(dateAndTimeData.date).setHours(endHour, endMinute);
             const end_date = new Date(setHourEndTime).toISOString();
             const slotData = { start_date, end_date, doctor: doctorId }
-            console.log("slotDate: ", slotData);
             useSlotCreateMutation.mutate(slotData, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
@@ -86,6 +95,12 @@ const SlotCreate = ({ slots, doctorId }) => {
             })
 
       };
+      // All Slots 
+      const AllSlots = () => {
+            setSearchSlot('');
+            setAllSlots(getSlot);
+            console.log(getSlot);
+      };
       return (
             <div>
                   <div className={`flex justify-${addButtonStyle.justify} mt-4 mr-${addButtonStyle.marginLeft} `}>
@@ -93,7 +108,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                               min={today}
                               max={twoWeek}
                               type="date"
-                              className={`border p-2  rounded-[7px] ${showDatePicker}`}
+                              className={`border p-2 rounded-[7px] ${showDatePicker}`}
                               onChange={e => setDateAndTimeData({ ...dateAndTimeData, date: e.target.value })}
                         />
                         <div>
@@ -110,35 +125,93 @@ const SlotCreate = ({ slots, doctorId }) => {
                               <button onClick={AddSlot} className='p-2 px-5 border rounded-[7px] bg-blue-500 text-white'>Add Slot</button>
                         </div>
                   </div>
-                  <div className='flex justify-around mt-5 '>
-                        <button className='border p-2  rounded-[7px] mr-3 h-11 w-11'>All</button>
-                        <input
-                              min={today}
-                              max={twoWeek}
-                              onChange={(e) => setSearchSlot(e.target.value)}
-                              type="date" className='border p-2  rounded-[7px] mr-3 h-11'
-                        />
-                        <ScrollArea className="h-72 w-[50%] border p-3 px-4 rounded-[7px]">
-                              {!checkDate?.length ? <h1 className='flex justify-center items-center h-72'>No Slot</h1>
-                                    : checkDate?.map((tag) => (
+                  <div className='  mt-5 '>
+                        {allSlots?.length ?
+                              <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11 border-blue-500'>All</button>
+                              :
+                              <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11'>All</button>
+                        }
+                        {!searchSlot ?
+                              <input
+                                    min={today}
+                                    max={twoWeek}
+                                    onChange={(e) => {
+                                          setSearchSlot(e.target.value)
+                                          setAllSlots('')
+                                    }}
+                                    type="date"
+                                    value={searchSlot}
+                                    className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none'
+                              /> :
+                              <input
+                                    min={today}
+                                    max={twoWeek}
+                                    onChange={(e) => setSearchSlot(e.target.value)}
+                                    type="date"
+                                    value={searchSlot}
+                                    className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none border-blue-500'
+                              />
+                        }
+
+                        <ScrollArea className="h-72 w-[100%] border p-3 px-4 rounded-[7px] mt-3">
+                              {allSlots?.length ? (!allSlots?.length ? <h1>not slot</h1>
+                                    : allSlots?.map((tag) => (
                                           <div key={tag.id} className='flex justify-center items-center my-2'>
-                                                <div className='flex'>
-                                                      <p>{tag.startDate}</p>
-                                                      <p className='mx-4'>-</p>
-                                                      <p>{tag.endDate}</p>
-                                                </div>
+                                                <TableBody className='flex'>
+                                                      <TableCell className=''>{tag.date}</TableCell>
+                                                      <TableCell>{tag.startDate}</TableCell>
+                                                      <TableCell>-</TableCell>
+                                                      <TableCell>{tag.endDate}</TableCell>
+                                                </TableBody>
                                                 <button
                                                       onClick={() => {
-
+                                                            setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id })
                                                             setOpen(true);
                                                       }}
-                                                      className='px-3 py-2  rounded-[7px] bg-green-500 text-white ml-6'
-                                                >Edit</button>
+                                                      className='  rounded-[7px]  text-blue-400 ml-6'
+                                                ><EditIcon /></button>
+                                                <button onClick={() => {
+                                                      setRemoveSlot({ id: tag.id })
+                                                      setOpenRemove(true);
+                                                }}
+                                                      className='w-6 h-6 ml-4'>
+                                                      <DeleteIcon />
+                                                </button>
                                           </div>
-                                    ))}
+                                    ))) :
+                                    (!checkDate?.length ? <h1 className='text-xl text-red-400 flex justify-center items-center h-60'>Not Slot</h1>
+                                          : checkDate?.map((tag) => (
+                                                <div key={tag.id} className='flex justify-center items-center my-2'>
+                                                      <TableBody className='flex'>
+                                                            <TableCell className=''>{tag.date}</TableCell>
+                                                            <TableCell>{tag.startDate}</TableCell>
+                                                            <TableCell>-</TableCell>
+                                                            <TableCell>{tag.endDate}</TableCell>
+                                                      </TableBody>
+                                                      <button
+                                                            onClick={() => {
+                                                                  setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id })
+                                                                  setOpen(true);
+                                                            }}
+                                                            className='  rounded-[7px]  text-blue-400 ml-6'
+                                                      >
+                                                            <EditIcon />
+                                                      </button>
+                                                      <button
+                                                            onClick={() => {
+                                                                  setRemoveSlot({ id: tag.id });
+                                                                  setOpenRemove(true)
+                                                            }}
+                                                            className='w-6 h-6 ml-4'
+                                                      >
+                                                            <DeleteIcon />
+                                                      </button>
+                                                </div>
+                                          )))}
                         </ScrollArea>
                   </div>
-                  <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={dateAndTimeData} />
+                  <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={editSlot} />
+                  <SlotRemove open={openRemove} setOpen={() => setOpenRemove(false)} slotId={removeSlot?.id} />
             </div>
       )
 }
