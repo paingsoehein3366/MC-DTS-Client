@@ -27,8 +27,8 @@ const DoctorListRoute = () => {
 				{lists &&
 					lists?.data.map((doctor) => (
 						<Card key={doctor._id}>
-							<div className=" flex justify-center items-center">
-								<div className="circle">
+							<div className=" flex justify-center items-center m-4">
+								<div className="">
 
 								<img
 									src={`${doctor.gender === "Male" ? Male : Female}`}
