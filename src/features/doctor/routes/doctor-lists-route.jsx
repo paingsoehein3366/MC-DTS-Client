@@ -29,11 +29,10 @@ const DoctorListRoute = () => {
 						<Card key={doctor._id}>
 							<div className=" flex justify-center items-center m-4">
 								<div className="">
-
-								<img
-									src={`${doctor.gender === "Male" ? Male : Female}`}
-									alt=""
-								/>
+									<img
+										src={`${doctor.gender === "Male" ? Male : Female}`}
+										alt=""
+									/>
 								</div>
 							</div>
 							<Link to={`/${doctor._id}/profile`}>
