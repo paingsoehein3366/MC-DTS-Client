@@ -46,8 +46,8 @@ const SlotCreate = ({ slots, doctorId }) => {
                         + ':' +
                         (getEndMinutes < 10 ? '0' + getEndMinutes.toString() : getEndMinutes),
 
-                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2]))
-
+                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
+                  id: item._id
             }
       });
       console.log("Iso", getSlot);
@@ -121,16 +121,20 @@ const SlotCreate = ({ slots, doctorId }) => {
                         <ScrollArea className="h-72 w-[50%] border p-3 px-4 rounded-[7px]">
                               {!checkDate?.length ? <h1 className='flex justify-center items-center h-72'>No Slot</h1>
                                     : checkDate?.map((tag) => (
-                                          <>
-                                                <div key={tag} className='flex justify-center items-center my-2'>
-                                                      <div className='flex'>
-                                                            <p>{tag.startDate}</p>
-                                                            <p className='mx-4'>-</p>
-                                                            <p>{tag.endDate}</p>
-                                                      </div>
-                                                      <button onClick={() => setOpen(true)} className='px-3 py-2  rounded-[7px] bg-green-500 text-white ml-6'>Edit</button>
+                                          <div key={tag.id} className='flex justify-center items-center my-2'>
+                                                <div className='flex'>
+                                                      <p>{tag.startDate}</p>
+                                                      <p className='mx-4'>-</p>
+                                                      <p>{tag.endDate}</p>
                                                 </div>
-                                          </>
+                                                <button
+                                                      onClick={() => {
+
+                                                            setOpen(true);
+                                                      }}
+                                                      className='px-3 py-2  rounded-[7px] bg-green-500 text-white ml-6'
+                                                >Edit</button>
+                                          </div>
                                     ))}
                         </ScrollArea>
                   </div>
