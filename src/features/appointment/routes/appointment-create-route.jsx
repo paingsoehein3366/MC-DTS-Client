@@ -44,6 +44,7 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
 
       const bookAppointment = async () => {
             const { message, key } = await createAppointmentValidate(appointmentData);
+            console.log("message: ", message);
             setErrorMessage({ [key]: message });
             if (message) return;
             const checkTime = appointmentData.time.split('-');
