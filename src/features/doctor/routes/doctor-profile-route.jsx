@@ -58,7 +58,6 @@ const DoctorProfileRoute = () => {
 									Setting
 								</button>
 							</div>
-
 							<SlotCreate slots={slots} doctorId={paramsId} />
 						</div>
 					</div>
