@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
 export const slotCreateSchema = yup.object().shape({
+      endTime: yup.string().required('Time is required!'),
+      startTime: yup.string().required('Time is required!'),
       date: yup.string().required('Date is required!'),
-      startTime: yup.string().required('StartTime is required!'),
-      endTime: yup.string().required('EndTime is required!')
 });
 
 export const slotCreateValidate = async (data) => {

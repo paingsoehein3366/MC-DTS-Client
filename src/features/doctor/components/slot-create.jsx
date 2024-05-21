@@ -1,22 +1,19 @@
 import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import { useState } from 'react';
-import { slotCreateValidate } from '../schema/slot-create-schema';
+import { slotCreateSchema } from '../schema/slot-create-schema';
 import SlotEdit from './slot-edit';
 import { useSlotCreate } from '../api/create-slot-api';
 import { queryClient } from '@/lib/react-query';
 import {
-      Table,
       TableBody,
       TableCell,
-      TableHead,
-      TableHeader,
-      TableRow,
 } from "@/components/ui/table";
 import EditIcon from './edit-icon';
 import DeleteIcon from '@/features/appointment/components/delete-icon';
 import SlotRemove from './slot-remove';
+import { useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 const SlotCreate = ({ slots, doctorId }) => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
@@ -24,6 +21,7 @@ const SlotCreate = ({ slots, doctorId }) => {
       const [removeSlot, setRemoveSlot] = useState({});
       const [allSlots, setAllSlots] = useState([]);
       const [searchSlot, setSearchSlot] = useState('');
+      const [errorMessage, setErrorMessage] = useState({});
       const [open, setOpen] = useState(false);
       const [openRemove, setOpenRemove] = useState(false);
       const [showDatePicker, setShowDatePicker] = useState('hidden');
@@ -40,6 +38,10 @@ const SlotCreate = ({ slots, doctorId }) => {
       const today = new Date().toISOString().split('T')[0];
       const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
 
+      const localTime = new Date().getHours();
+      const localMinutes = new Date().getMinutes();
+      const localDate = new Date().toLocaleDateString()
+      console.log("nowTime: ");
 
       // Get Slot
       const getSlot = slots?.map(item => {
@@ -60,15 +62,20 @@ const SlotCreate = ({ slots, doctorId }) => {
                         + ':' +
                         (getEndMinutes < 10 ? '0' + getEndMinutes.toString() : getEndMinutes),
 
-                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2]) + 1),
+                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
                   id: item._id
             }
       });
+      console.log("GetSlot: ", getSlot);
+      useEffect(() => {
+            setAllSlots(getSlot);
+      }, [getSlot?.length]);
+
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
 
       // Add Slot
-      const AddSlot = () => {
+      const AddSlot = async () => {
             if (showDatePicker === 'inline' && !dateAndTimeData.date && !dateAndTimeData.startTime) {
                   setShowDatePicker('hidden');
                   setAddButtonStyle({ justify: "end", marginLeft: 6 });
@@ -76,7 +83,13 @@ const SlotCreate = ({ slots, doctorId }) => {
                   setShowDatePicker('inline');
                   setAddButtonStyle({ justify: 'around', marginLeft: 0 })
             };
-            const { message, key } = slotCreateValidate(dateAndTimeData);
+            const { message, key } = await slotCreateSchema.validate(dateAndTimeData).catch(err => {
+                  const message = err.errors;
+                  const key = err.path;
+                  return { message, key }
+            });
+            setErrorMessage({ [key]: message });
+            if (message) return;
             const setHourStartTime = new Date(dateAndTimeData.date).setHours(startHour, startMinute)
             const start_date = new Date(setHourStartTime).toISOString();
             const setHourEndTime = new Date(dateAndTimeData.date).setHours(endHour, endMinute);
@@ -86,43 +99,51 @@ const SlotCreate = ({ slots, doctorId }) => {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
                               queryKey: ['slots']
-                        })
-                        console.log("success");
+                        });
+                        toast.success('Slot add success!')
                   },
                   onError: (err) => {
-                        console.log("slot create error:", err.message);
+                        console.log("slot create error:", err.response.data.message);
                   }
-            })
-
+            });
       };
       // All Slots 
       const AllSlots = () => {
             setSearchSlot('');
             setAllSlots(getSlot);
-            console.log(getSlot);
       };
       return (
             <div>
                   <div className={`flex justify-${addButtonStyle.justify} mt-4 mr-${addButtonStyle.marginLeft} `}>
-                        <input
-                              min={today}
-                              max={twoWeek}
-                              type="date"
-                              className={`border p-2 rounded-[7px] ${showDatePicker}`}
-                              onChange={e => setDateAndTimeData({ ...dateAndTimeData, date: e.target.value })}
-                        />
-                        <div>
+                        <div className={`flex flex-col ${showDatePicker}`}>
                               <input
-                                    type="time"
-                                    className={`border p-2  rounded-[7px] ${showDatePicker}`}
-                                    onChange={e => setDateAndTimeData({ ...dateAndTimeData, startTime: e.target.value })}
+                                    min={today}
+                                    max={twoWeek}
+                                    type="date"
+                                    className={`border p-2 rounded-[7px]`}
+                                    onChange={e => setDateAndTimeData({ ...dateAndTimeData, date: e.target.value })}
                               />
-                              <input
-                                    type="time"
-                                    className={`border p-2  rounded-[7px] mx-2 ${showDatePicker}`}
-                                    onChange={e => setDateAndTimeData({ ...dateAndTimeData, endTime: e.target.value })}
-                              />
-                              <button onClick={AddSlot} className='p-2 px-5 border rounded-[7px] bg-blue-500 text-white'>Add Slot</button>
+                              <span className="text-red-500 text-sm ml-4">{errorMessage.date}</span>
+                        </div>
+                        <div className='flex'>
+                              <div className={`flex flex-col ${showDatePicker}`}>
+                                    <input
+                                          type="time"
+                                          className={`border p-2  rounded-[7px] w-28`}
+                                          onChange={e => setDateAndTimeData({ ...dateAndTimeData, startTime: e.target.value })}
+                                    />
+                                    <span className="text-red-500 text-sm ml-4">{errorMessage.startTime}</span>
+                              </div>
+                              <div className={`flex flex-col ${showDatePicker}`}>
+                                    <input
+                                          min={localTime}
+                                          type="time"
+                                          className={`border p-2  rounded-[7px] mx-2 w-28`}
+                                          onChange={e => setDateAndTimeData({ ...dateAndTimeData, endTime: e.target.value })}
+                                    />
+                                    <span className="text-red-500 text-sm ml-4">{errorMessage.endTime}</span>
+                              </div>
+                              <button onClick={AddSlot} className='p-2 px-5 border rounded-[7px] bg-blue-500 text-white h-11'>Add Slot</button>
                         </div>
                   </div>
                   <div className='  mt-5 '>
@@ -131,7 +152,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                               :
                               <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11'>All</button>
                         }
-                        {!searchSlot ?
+                        {!checkDate?.length ?
                               <input
                                     min={today}
                                     max={twoWeek}
@@ -152,10 +173,9 @@ const SlotCreate = ({ slots, doctorId }) => {
                                     className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none border-blue-500'
                               />
                         }
-
                         <ScrollArea className="h-72 w-[100%] border p-3 px-4 rounded-[7px] mt-3">
                               {allSlots?.length ? (!allSlots?.length ? <h1>not slot</h1>
-                                    : allSlots?.map((tag) => (
+                                    : getSlot?.map((tag) => (
                                           <div key={tag.id} className='flex justify-center items-center my-2'>
                                                 <TableBody className='flex'>
                                                       <TableCell className=''>{tag.date}</TableCell>
@@ -212,6 +232,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                   </div>
                   <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={editSlot} />
                   <SlotRemove open={openRemove} setOpen={() => setOpenRemove(false)} slotId={removeSlot?.id} />
+                  <ToastContainer />
             </div>
       )
 }

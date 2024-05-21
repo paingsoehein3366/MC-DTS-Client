@@ -2,6 +2,7 @@ import UpdateIcon from '@/components/icons/update-icon';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { queryClient } from '@/lib/react-query';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useUpdateSlot } from '../api/update-slot-api';
 
 const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => {
@@ -30,9 +31,9 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
                         queryClient.invalidateQueries({
                               queryKey: ['slots']
                         })
-                        console.log("success");
                         setUpdateSlotData({});
                         setSlotEditDialogBoxOpen();
+                        toast.success('Slot updat success!');
                   },
                   onError: (err) => {
                         console.log("Error: ", err.message);
