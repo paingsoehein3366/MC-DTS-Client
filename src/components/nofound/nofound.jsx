@@ -1,7 +1,9 @@
+import ErrorNoFound from "../../assets/nofound.jpg"
+
 const NoFound = () => {
   return (
-    <div>
-      <h1 className="">No Found</h1>
+    <div className="flex justify-center my-28">
+      <img className="w-[300px] h-[300px]" src={ErrorNoFound} alt="" />
     </div>
   )
 }

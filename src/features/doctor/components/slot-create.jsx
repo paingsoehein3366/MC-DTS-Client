@@ -13,6 +13,7 @@ import EditIcon from './edit-icon';
 import DeleteIcon from '@/features/appointment/components/delete-icon';
 import SlotRemove from './slot-remove';
 import { useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 const SlotCreate = ({ slots, doctorId }) => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
@@ -37,6 +38,10 @@ const SlotCreate = ({ slots, doctorId }) => {
       const today = new Date().toISOString().split('T')[0];
       const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
 
+      const localTime = new Date().getHours();
+      const localMinutes = new Date().getMinutes();
+      const localDate = new Date().toLocaleDateString()
+      console.log("nowTime: ");
 
       // Get Slot
       const getSlot = slots?.map(item => {
@@ -61,9 +66,11 @@ const SlotCreate = ({ slots, doctorId }) => {
                   id: item._id
             }
       });
+      console.log("GetSlot: ", getSlot);
       useEffect(() => {
             setAllSlots(getSlot);
       }, [getSlot?.length]);
+
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
 
@@ -93,7 +100,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                         queryClient.invalidateQueries({
                               queryKey: ['slots']
                         });
-                        console.log("success");
+                        toast.success('Slot add success!')
                   },
                   onError: (err) => {
                         console.log("slot create error:", err.response.data.message);
@@ -129,6 +136,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                               </div>
                               <div className={`flex flex-col ${showDatePicker}`}>
                                     <input
+                                          min={localTime}
                                           type="time"
                                           className={`border p-2  rounded-[7px] mx-2 w-28`}
                                           onChange={e => setDateAndTimeData({ ...dateAndTimeData, endTime: e.target.value })}
@@ -144,7 +152,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                               :
                               <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11'>All</button>
                         }
-                        {!searchSlot ?
+                        {!checkDate?.length ?
                               <input
                                     min={today}
                                     max={twoWeek}
@@ -165,10 +173,9 @@ const SlotCreate = ({ slots, doctorId }) => {
                                     className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none border-blue-500'
                               />
                         }
-
                         <ScrollArea className="h-72 w-[100%] border p-3 px-4 rounded-[7px] mt-3">
                               {allSlots?.length ? (!allSlots?.length ? <h1>not slot</h1>
-                                    : allSlots?.map((tag) => (
+                                    : getSlot?.map((tag) => (
                                           <div key={tag.id} className='flex justify-center items-center my-2'>
                                                 <TableBody className='flex'>
                                                       <TableCell className=''>{tag.date}</TableCell>
@@ -225,6 +232,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                   </div>
                   <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={editSlot} />
                   <SlotRemove open={openRemove} setOpen={() => setOpenRemove(false)} slotId={removeSlot?.id} />
+                  <ToastContainer />
             </div>
       )
 }

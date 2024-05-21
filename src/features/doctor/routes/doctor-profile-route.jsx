@@ -22,41 +22,47 @@ const DoctorProfileRoute = () => {
 	return (
 		<div>
 			{isLoading && <Loading />}
-			<Card>
-				<div className="grid grid-cols-2 gap-6 p-8">
-					<div className="flex gap-8 items-center border-r-2">
+			{DoctorValue && (
+				<Card>
+					<div className="grid grid-cols-2 gap-6 p-8">
+						<div className="flex gap-8 items-center border-r-2">
+							<div className="">
+								<img
+									src={`${DoctorValue?.gender === "Male" ? Male : Female}`}
+									alt=""
+								/>
+							</div>
+							<div className="space-y-3">
+								<h1 className="">Name - {DoctorValue?.name}</h1>
+								<h1 className="">Specialist - {DoctorValue?.specialist}</h1>
+								<h1 className="">Experiences - {DoctorValue?.experiences}</h1>
+								<h1 className="">Gender - {DoctorValue?.gender}</h1>
+							</div>
+						</div>
 						<div className="">
-							<img src={`${DoctorValue?.gender === "Male" ? Male : Female}`} alt="" />
-						</div>
-						<div className="space-y-3">
-							<h1 className="">Name - {DoctorValue?.name}</h1>
-							<h1 className="">Specialist - {DoctorValue?.specialist}</h1>
-							<h1 className="">Experiences - {DoctorValue?.experiences}</h1>
-							<h1 className="">Gender - {DoctorValue?.gender}</h1>
+							<div className="flex gap-4 border-b-2 pb-2">
+								<button
+									onClick={() => setToggle("slot")}
+									className={`${button} ${
+										toggle === "slot" && "bg-blue-500 text-white"
+									}`}
+								>
+									Time Slots
+								</button>
+								<button
+									onClick={() => setToggle("setting")}
+									className={`${button} ${
+										toggle === "setting" && "bg-blue-500 text-white"
+									}`}
+								>
+									Setting
+								</button>
+							</div>
+							<SlotCreate slots={slots} doctorId={paramsId} />
 						</div>
 					</div>
-					<div className="">
-						<div className="flex gap-4 border-b-2 pb-2">
-							<button
-								onClick={() => setToggle("slot")}
-								className={`${button} ${toggle === "slot" && "bg-blue-500 text-white"
-									}`}
-							>
-								Time Slots
-							</button>
-							<button
-								onClick={() => setToggle("setting")}
-								className={`${button} ${toggle === "setting" && "bg-blue-500 text-white"
-									}`}
-							>
-								Setting
-							</button>
-						</div>
-
-						<SlotCreate slots={slots} doctorId={paramsId} />
-					</div>
-				</div>
-			</Card>
+				</Card>
+			)}
 		</div>
 	);
 };

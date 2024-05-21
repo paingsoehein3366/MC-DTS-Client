@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { queryClient } from "@/lib/react-query";
+import { toast } from "react-toastify";
 import { useDeleteSlot } from "../api/delete-slot-api";
 
 export default function SlotRemove({ open, setOpen, slotId }) {
@@ -13,7 +14,7 @@ export default function SlotRemove({ open, setOpen, slotId }) {
                         queryClient.invalidateQueries({
                               queryKey: ['slots']
                         })
-                        console.log("success");
+                        toast.success('Slot remove success')
                   },
                   onError: (err) => {
                         console.log("Error: ", err.message);
