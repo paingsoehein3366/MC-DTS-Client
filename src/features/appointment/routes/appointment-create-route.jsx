@@ -16,22 +16,48 @@ import {
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-// import { useAppointmentCreate } from '../api';
+import { useAppointmentCreate } from '../api';
 import { createAppointmentValidate } from '../schema/appointment-create-schema';
-
-const AppointmentCreateRoute = ({ open, setOpen }) => {
+// import { useGetDoctorSlot } from '@/features/doctor/api/get-doctor-slot-api';
+import { useGetDoctorSlots } from '../api/appointment-get-api';
+import { useEffect } from 'react';
+import { queryClient } from '@/lib/react-query';
+import { toast } from 'react-toastify';
+const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       const [appointmentData, setAppointmentData] = useState({
-            name: "",
+            username: "",
             email: "",
             doctor: "",
-            phone: "",
-            time: "",
-            date: "",
-            comments: "",
+            phone_number: "",
+            slot: "",
+            description: "",
             gender: ""
       });
-      const [errorMessage, setErrorMessage] = useState({})
-      // const createMutation = useAppointmentCreate();
+      const [date, setDate] = useState();
+      const [errorMessage, setErrorMessage] = useState({});
+      const { data } = useGetDoctorSlots(appointmentData.doctor);
+      console.log("Data: ", data);
+      console.log("appointmentData: ", appointmentData);
+      const useCreateMutation = useAppointmentCreate();
+
+      const today = new Date().toISOString().split('T')[0];
+      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
+
+      const changeIOSstring = data?.data?.slots?.map(item => {
+            const startHour = new Date(item.start_date).getHours();
+            const startMinute = new Date(item.start_date).getMinutes();
+            const endHour = new Date(item.end_date).getHours();
+            const endMinute = new Date(item.end_date).getMinutes();
+            return {
+                  startDate: (startHour < 10 ? '0' + startHour : startHour) + ':' + (startMinute < 10 ? '0' + startMinute : startMinute),
+                  endDate: (endHour < 10 ? '0' + endHour : endHour) + ':' + (endMinute < 10 ? '0' + endMinute : endMinute),
+                  date: new Date(item.end_date).toISOString().substring(0, 10),
+                  id: item._id
+            }
+      });
+
+      const checkDate = changeIOSstring?.filter(item => date?.includes(item.date))
+      console.log("checkDate:", checkDate);
 
       const inputStyle = "border border-gray-300 w-48 h-10 px-3 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-500";
       const inputContainer = "flex flex-col";
@@ -44,28 +70,23 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
 
       const bookAppointment = async () => {
             const { message, key } = await createAppointmentValidate(appointmentData);
-            console.log("message: ", message);
             setErrorMessage({ [key]: message });
             if (message) return;
-            const checkTime = appointmentData.time.split('-');
-            const startTime = parseInt(checkTime[0]);
-            const endTime = parseInt(checkTime[1]);
-            const date = appointmentData.date;
-            const setHourStartTime = new Date(date).setHours(startTime);
-            const startDate = new Date(setHourStartTime).toISOString();
-            const setHourEndTime = new Date(date).setHours(endTime);
-            const endDate = new Date(setHourEndTime).toISOString();
-            const data = { name: appointmentData.name, email: appointmentData.email, doctor: appointmentData.doctor, phone: appointmentData.phone, startDate, endDate, comments: appointmentData.comments, gender: appointmentData.gender }
-            // createMutation.mutate(data, {
-            //       onSuccess: () => {
-            //             setOpen()
-            //       },
-            //       onError: (error) => {
-            //             window.alert(error.message)
-            //       }
-            // })
-            setOpen();
+            console.log("bookAppointmentData: ", appointmentData);
+            useCreateMutation.mutate(appointmentData, {
+                  onSuccess: () => {
+                        queryClient.invalidateQueries({
+                              queryKey: ['appointments']
+                        })
+                        toast('Appointment success!');
+                        setOpen();
+                  },
+                  onError: (error) => {
+                        console.log(error);
+                  }
+            });
       };
+
       return (
             <Dialog open={open} onOpenChange={setOpen} >
                   <DialogContent className="bg-[#fff] sm:max-w-[750px] px-10 py-8">
@@ -80,7 +101,7 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
                                           type="text"
                                           className='border w-full h-10 px-4 border-gray-300 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-400'
                                           placeholder='Patient Name:'
-                                          name='name'
+                                          name='username'
                                           onChange={handleOnchange}
                                     />
                                     <span className="text-red-500 text-sm ml-4">{errorMessage.name}</span>
@@ -91,13 +112,14 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
                                           <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, doctor: value })} >
                                                 <SelectTrigger className={selectStyle} >
                                                       <SelectValue
-                                                            placeholder="Dr.Paing"
+                                                            placeholder="Doctor"
                                                       />
                                                 </SelectTrigger>
+
                                                 <SelectContent className="bg-[#fff]">
-                                                      <SelectItem value="paing">Dr.Paing</SelectItem>
-                                                      <SelectItem value="soe">Dr.Soe</SelectItem>
-                                                      <SelectItem value="hein">Dr.Hein</SelectItem>
+                                                      {doctorData?.data?.map(item => (
+                                                            <SelectItem value={item._id}>Dr.{item.name}</SelectItem>
+                                                      ))}
                                                 </SelectContent>
                                           </Select>
                                           <span className="text-red-500 text-sm ml-4">{errorMessage.doctor}</span>
@@ -119,40 +141,43 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
                                                 type="text"
                                                 className={inputStyle}
                                                 placeholder='Your Phone'
-                                                name='phone'
+                                                name='phone_number'
                                                 onChange={handleOnchange}
                                           />
                                           <span className="text-red-500 text-sm ml-4">{errorMessage.phone}</span>
                                     </div>
                               </div>
                               <div className='flex mt-5 justify-between'>
-                                    <div className={inputContainer}>
-                                          <Label>Time <span className='text-red-500'>*</span></Label>
-                                          <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, time: value })} name="time">
-                                                <SelectTrigger className={selectStyle}>
-                                                      <SelectValue
-                                                            placeholder="10:00AM - 11:00AM"
-                                                            name='Time'
-                                                            onChange={handleOnchange}
-                                                      />
-                                                </SelectTrigger>
-                                                <SelectContent className="bg-[#fff]">
-                                                      <SelectItem value="10:00 - 11:00">10:00AM - 11:00AM</SelectItem>
-                                                      <SelectItem value="12:00 - 13:00">12:00PM - 13:00PM</SelectItem>
-                                                </SelectContent>
-                                          </Select>
-                                          <span className="text-red-500 text-sm ml-4">{errorMessage.time}</span>
-                                    </div>
                                     <div className="flex flex-col">
                                           <Label>Date <span className='text-red-500'>*</span></Label>
                                           <input
+                                                min={today}
+                                                max={twoWeek}
                                                 type="date"
                                                 className={inputStyle}
                                                 placeholder=''
                                                 name='date'
-                                                onChange={handleOnchange}
+                                                onChange={(e) => setDate(e.target.value)}
                                           />
                                           <span className="text-red-500 text-sm ml-4">{errorMessage.date}</span>
+                                    </div>
+                                    <div className={inputContainer}>
+                                          <Label>Time <span className='text-red-500'>*</span></Label>
+                                          <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
+                                                <SelectTrigger className={selectStyle}>
+                                                      <SelectValue
+                                                            placeholder="Time"
+                                                            name='slot'
+                                                            onChange={handleOnchange}
+                                                      />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-[#fff]">
+                                                      {checkDate?.map(item => (
+                                                            <SelectItem value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
+                                                      ))}
+                                                </SelectContent>
+                                          </Select>
+                                          <span className="text-red-500 text-sm ml-4">{errorMessage.time}</span>
                                     </div>
                                     <div className={inputContainer}>
                                           <Label>Gender <span className='text-red-500'>*</span></Label>
@@ -175,7 +200,7 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
                                     <textarea
                                           className='border w-full mt-2 h-32 px-4 py-2 rounded-[7px] border-gray-300 text-sm focus:outline-none focus:border-blue-500'
                                           placeholder='Your Message:'
-                                          name='comments'
+                                          name='description'
                                           onChange={handleOnchange}
                                     ></textarea>
                               </div>
@@ -187,7 +212,6 @@ const AppointmentCreateRoute = ({ open, setOpen }) => {
                               </DialogFooter>
                         </div>
                   </DialogContent>
-
             </Dialog >
 
       )

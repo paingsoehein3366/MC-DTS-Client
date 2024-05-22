@@ -6,11 +6,27 @@ import {
       AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { queryClient } from "@/lib/react-query";
+import { toast } from "react-toastify";
+import { useAppointmentDelete } from "../api/appointment-delete-api";
 import DeleteIcon from "../components/delete-icon"
 
-export default function AppointmentDeleteRoute({ open, setOpen }) {
+export default function AppointmentDeleteRoute({ open, setOpen, appointmentId }) {
+      console.log("appointmentId: ", appointmentId);
+      const useAppointmentDeleteMutation = useAppointmentDelete();
       const AppointmentDelete = () => {
-            setOpen()
+            useAppointmentDeleteMutation.mutate(appointmentId, {
+                  onSuccess: () => {
+                        queryClient.invalidateQueries({
+                              queryKey: ['appointments']
+                        })
+                        toast('Appointment delete success!')
+                        setOpen();
+                  },
+                  onError: (err) => {
+                        console.log("Error: ", err.message);
+                  }
+            })
       }
       return (
             <AlertDialog open={open} onOpenChange={setOpen}>

@@ -9,7 +9,8 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
       const [updateSlotData, setUpdateSlotData] = useState({});
       const useUpdateMutation = useUpdateSlot();
       const inputStyle = 'border p-2   rounded-[7px] mx-2 focus:outline-none focus:border-blue-500';
-
+      const today = new Date().toISOString().split('T')[0];
+      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
       const updateSlot = async () => {
             console.log("id: ", data.id, ", data: ", updateSlotData);
             if (!updateSlotData.date) {
@@ -19,14 +20,14 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
             } if (!updateSlotData.endDate) {
                   updateSlotData.endDate = data.endDate;
             }
-
+            console.log(updateSlotData);
             const startHour = parseInt(updateSlotData.startDate);
             const startMinute = updateSlotData.startDate.split(':')[1];
             const endHour = parseInt(updateSlotData.endDate);
             const endMinute = updateSlotData.endDate.split(':')[1];
             const startDate = new Date(new Date(updateSlotData.date).setHours(startHour, startMinute)).toISOString();
             const endDate = new Date(new Date(updateSlotData.date).setHours(endHour, endMinute)).toISOString();
-            useUpdateMutation.mutate({ id: data.id, data: { start_date: startDate, end_date: endDate } }, {
+            useUpdateMutation.mutate({ id: data.id, data: { start_date: startDate, end_date: endDate, doctor: data?.doctorId } }, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
                               queryKey: ['slots']
@@ -45,7 +46,14 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
                   <DialogContent className="bg-white">
                         <h1 className='flex justify-center text-xl text-gray-600'>Update Slot</h1>
                         <div className='flex justify-center my-5'>
-                              <input className={inputStyle} onChange={(e) => setUpdateSlotData({ ...updateSlotData, date: e.target.value })} type="date" defaultValue={data.date} />
+                              <input
+                                    min={today}
+                                    max={twoWeek}
+                                    className={inputStyle}
+                                    onChange={(e) => setUpdateSlotData({ ...updateSlotData, date: e.target.value })}
+                                    type="date"
+                                    defaultValue={data.date}
+                              />
                               <input className={inputStyle} onChange={(e) => setUpdateSlotData({ ...updateSlotData, startDate: e.target.value })} type="time" defaultValue={data.startDate} />
                               <input className={inputStyle} onChange={(e) => setUpdateSlotData({ ...updateSlotData, endDate: e.target.value })} type="time" defaultValue={data.endDate} />
                               <button
