@@ -21,11 +21,20 @@ import EyeIcon from '../components/eye-icon';
 import { PatientProfile } from './patient-profile';
 import DeleteIcon from '../components/delete-icon';
 import AppointmentDeleteRoute from './appointment-delete-route';
+import { useGetAllAppointments } from '../api/appointment-get-api';
+import { useGetAllDoctors } from '@/features/doctor/api/get-all-doctors-api';
+import { ToastContainer } from 'react-toastify';
 
 const AppointmentListRoute = () => {
+      const [patientData, setPatientData] = useState();
       const [openAppointment, setOpenAppointment] = useState(false);
       const [patientProfileOpen, setPatientProfileOpen] = useState(false);
       const [patientDeleteOpen, setPatientDeleteOpen] = useState(false);
+      const [appointmentId, setAppointmentId] = useState();
+      const { data } = useGetAllAppointments();
+      const { data: DoctorData } = useGetAllDoctors();
+
+      // appointments/doctorId/
       return (
             <div>
                   <div className="flex justify-end gap-3 mb-3">
@@ -57,22 +66,48 @@ const AppointmentListRoute = () => {
                               </TableRow>
                         </TableHeader>
                         <TableBody>
-                              <TableRow>
-                                    <TableCell className="">INV001</TableCell>
-                                    <TableCell className="">paid@email.com</TableCell>
-                                    <TableCell className="">30</TableCell>
-                                    <TableCell className="">2/2/24</TableCell>
-                                    <TableCell className="">1:00PM-2:00PM</TableCell>
-                                    <TableCell className="">Dr.Paing</TableCell>
-                                    <TableCell className="">$250.00</TableCell>
-                                    <Button onClick={() => setPatientProfileOpen(true)}><EyeIcon /></Button>
-                                    <Button onClick={() => setPatientDeleteOpen(true)}><DeleteIcon /></Button>
-                              </TableRow>
+                              {data?.data?.data?.map(item => {
+                                    const startHour = new Date(item?.slot?.start_date).getHours();
+                                    const startMinute = new Date(item?.slot?.start_date).getMinutes();
+                                    const endHour = new Date(item?.slot?.end_date).getHours();
+                                    const endMinute = new Date(item?.slot?.end_date).getMinutes();
+                                    const startDate = (startHour < 10 ? '0' + startHour : startHour) + ':' + (startMinute < 10 ? '0' + startMinute : startMinute);
+                                    const endDate = (endHour < 10 ? '0' + endHour : endHour) + ':' + (endMinute < 10 ? '0' + endMinute : endMinute);
+                                    const date = new Date(item?.slot?.end_date).toISOString().substring(0, 10)
+                                    return (
+                                          <TableRow>
+                                                <TableCell className="">{item.username}</TableCell>
+                                                <TableCell className="">{item.email}</TableCell>
+                                                <TableCell className="">{item.age}</TableCell>
+                                                <TableCell className="">{date}</TableCell>
+                                                <TableCell className="">{startDate} : {endDate}</TableCell>
+                                                <TableCell className="">Dr.{item?.doctor?.name}</TableCell>
+                                                <TableCell className="">$250.00</TableCell>
+                                                <Button
+                                                      onClick={() => {
+                                                            setPatientProfileOpen(true);
+                                                            setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate })
+                                                      }}
+                                                >
+                                                      <EyeIcon />
+                                                </Button>
+                                                <Button
+                                                      onClick={() => {
+                                                            setPatientDeleteOpen(true);
+                                                            setAppointmentId(item.id)
+                                                      }}
+                                                >
+                                                      <DeleteIcon />
+                                                </Button>
+                                          </TableRow>
+                                    )
+                              })}
                         </TableBody>
                   </Table>
-                  <AppointmentCreateRoute open={openAppointment} setOpen={() => setOpenAppointment(false)} />
-                  <PatientProfile open={patientProfileOpen} setOpen={() => setPatientProfileOpen(false)} />
-                  <AppointmentDeleteRoute open={patientDeleteOpen} setOpen={() => setPatientDeleteOpen(false)} />
+                  <AppointmentCreateRoute open={openAppointment} setOpen={() => setOpenAppointment(false)} doctorData={DoctorData} />
+                  <PatientProfile open={patientProfileOpen} setOpen={() => setPatientProfileOpen(false)} patientData={patientData} />
+                  <AppointmentDeleteRoute open={patientDeleteOpen} setOpen={() => setPatientDeleteOpen(false)} appointmentId={appointmentId} />
+                  <ToastContainer />
             </div>
       )
 }

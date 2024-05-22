@@ -28,6 +28,7 @@ const SlotCreate = ({ slots, doctorId }) => {
       const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: 6 });
 
       const useSlotCreateMutation = useSlotCreate();
+      console.log("Slot: ", slots);
 
       const startHour = parseInt(dateAndTimeData.startTime);
       const startMinute = dateAndTimeData.startTime.split(':')[1];
@@ -69,7 +70,7 @@ const SlotCreate = ({ slots, doctorId }) => {
       console.log("GetSlot: ", getSlot);
       useEffect(() => {
             setAllSlots(getSlot);
-      }, [getSlot?.length]);
+      }, []);
 
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
@@ -150,7 +151,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                         {allSlots?.length ?
                               <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11 border-blue-500'>All</button>
                               :
-                              <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11'>All</button>
+                              <button onClick={AllSlots} className='border p-2  rounded-[7px] mr-3 h-11 w-11 focus:outline-none focus:border-blue-500'>All</button>
                         }
                         {!checkDate?.length ?
                               <input
@@ -162,7 +163,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                                     }}
                                     type="date"
                                     value={searchSlot}
-                                    className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none'
+                                    className='border p-2  rounded-[7px] mr-3 h-11 focus:outline-none focus:border-blue-500'
                               /> :
                               <input
                                     min={today}
@@ -185,7 +186,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                                                 </TableBody>
                                                 <button
                                                       onClick={() => {
-                                                            setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id })
+                                                            setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id, doctorId })
                                                             setOpen(true);
                                                       }}
                                                       className='  rounded-[7px]  text-blue-400 ml-6'
@@ -210,7 +211,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                                                       </TableBody>
                                                       <button
                                                             onClick={() => {
-                                                                  setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id })
+                                                                  setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id, doctorId })
                                                                   setOpen(true);
                                                             }}
                                                             className='  rounded-[7px]  text-blue-400 ml-6'
