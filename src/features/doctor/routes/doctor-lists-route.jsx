@@ -7,6 +7,7 @@ import DoctorCreateRoute from "./doctor-create-route";
 import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
 import { Loading } from "@/components";
+import { ToastContainer } from "react-toastify";
 
 const DoctorListRoute = () => {
 	const { data: lists, isLoading, error } = useGetAllDoctors();

@@ -14,6 +14,7 @@ import DeleteIcon from '@/features/appointment/components/delete-icon';
 import SlotRemove from './slot-remove';
 import { useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import { useGetAllAppointments } from '@/features/appointment/api/appointment-get-api';
 
 const SlotCreate = ({ slots, doctorId }) => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
@@ -28,7 +29,8 @@ const SlotCreate = ({ slots, doctorId }) => {
       const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: 6 });
 
       const useSlotCreateMutation = useSlotCreate();
-      console.log("Slot: ", slots);
+      const { data: appointments } = useGetAllAppointments();
+      console.log("appointment: ", appointments);
 
       const startHour = parseInt(dateAndTimeData.startTime);
       const startMinute = dateAndTimeData.startTime.split(':')[1];
@@ -38,11 +40,6 @@ const SlotCreate = ({ slots, doctorId }) => {
       // choose day decide
       const today = new Date().toISOString().split('T')[0];
       const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
-
-      const localTime = new Date().getHours();
-      const localMinutes = new Date().getMinutes();
-      const localDate = new Date().toLocaleDateString()
-      console.log("nowTime: ");
 
       // Get Slot
       const getSlot = slots?.map(item => {
@@ -72,6 +69,9 @@ const SlotCreate = ({ slots, doctorId }) => {
             setAllSlots(getSlot);
       }, []);
 
+      //Check slot isAppointment
+      const checkSlot = appointments?.data?.data.map(item => item.slot)
+      console.log("checkSlot: ", checkSlot);
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
 
@@ -137,7 +137,6 @@ const SlotCreate = ({ slots, doctorId }) => {
                               </div>
                               <div className={`flex flex-col ${showDatePicker}`}>
                                     <input
-                                          min={localTime}
                                           type="time"
                                           className={`border p-2  rounded-[7px] mx-2 w-28`}
                                           onChange={e => setDateAndTimeData({ ...dateAndTimeData, endTime: e.target.value })}
@@ -184,12 +183,13 @@ const SlotCreate = ({ slots, doctorId }) => {
                                                       <TableCell>-</TableCell>
                                                       <TableCell>{tag.endDate}</TableCell>
                                                 </TableBody>
+                                                {checkDate}
                                                 <button
                                                       onClick={() => {
                                                             setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id, doctorId })
                                                             setOpen(true);
                                                       }}
-                                                      className='  rounded-[7px]  text-blue-400 ml-6'
+                                                      className='rounded-[7px]  text-blue-400 ml-6'
                                                 ><EditIcon /></button>
                                                 <button onClick={() => {
                                                       setRemoveSlot({ id: tag.id })

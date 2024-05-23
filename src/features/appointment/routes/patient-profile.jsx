@@ -24,11 +24,11 @@ export function PatientProfile({ open, setOpen, patientData }) {
                                     <div>
                                           <div className={style}>
                                                 <span>Age:</span>
-                                                <span className={valueStyle}>23 year old</span>
+                                                <span className={valueStyle}>{patientData?.age} year old</span>
                                           </div>
                                           <div className={style}>
                                                 <span>Gender:</span>
-                                                <span className={valueStyle}>Male</span>
+                                                <span className={valueStyle}>{patientData?.gender}</span>
                                           </div>
                                           <div className={style}>
                                                 <span>Date:</span>

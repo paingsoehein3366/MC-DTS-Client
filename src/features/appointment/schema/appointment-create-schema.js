@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 
 export const createAppointmentSchema = yup.object().shape({
+      age: yup.string().required('Age is required!'),
       gender: yup.string().required('Gender is required!'),
       slot: yup.string().required('Time is required!'),
       phone_number: yup.string().required('Phone is required!'),
