@@ -20,7 +20,6 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
             } if (!updateSlotData.endDate) {
                   updateSlotData.endDate = data.endDate;
             }
-            console.log(updateSlotData);
             const startHour = parseInt(updateSlotData.startDate);
             const startMinute = updateSlotData.startDate.split(':')[1];
             const endHour = parseInt(updateSlotData.endDate);

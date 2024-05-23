@@ -86,7 +86,7 @@ const AppointmentListRoute = () => {
                                                 <Button
                                                       onClick={() => {
                                                             setPatientProfileOpen(true);
-                                                            setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate })
+                                                            setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate, gender: item.gender })
                                                       }}
                                                 >
                                                       <EyeIcon />

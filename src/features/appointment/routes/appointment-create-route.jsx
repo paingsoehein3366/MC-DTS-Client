@@ -18,11 +18,10 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAppointmentCreate } from '../api';
 import { createAppointmentValidate } from '../schema/appointment-create-schema';
-// import { useGetDoctorSlot } from '@/features/doctor/api/get-doctor-slot-api';
-import { useGetDoctorSlots } from '../api/appointment-get-api';
-import { useEffect } from 'react';
+import { useGetDoctorSlots } from '../api/doctor-slot-get-api';
 import { queryClient } from '@/lib/react-query';
 import { toast } from 'react-toastify';
+
 const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       const [appointmentData, setAppointmentData] = useState({
             username: "",
@@ -31,17 +30,19 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
             phone_number: "",
             slot: "",
             description: "",
-            gender: ""
+            gender: "",
+            age: ""
       });
       const [date, setDate] = useState();
       const [errorMessage, setErrorMessage] = useState({});
+      console.log("errormessage: ", errorMessage);
+
       const { data } = useGetDoctorSlots(appointmentData.doctor);
-      console.log("Data: ", data);
-      console.log("appointmentData: ", appointmentData);
       const useCreateMutation = useAppointmentCreate();
 
-      const today = new Date().toISOString().split('T')[0];
-      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
+      const inputStyle = "border border-gray-300 w-48 h-10 px-3 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-500";
+      const inputContainer = "flex flex-col";
+      const selectStyle = "w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500";
 
       const changeIOSstring = data?.data?.slots?.map(item => {
             const startHour = new Date(item.start_date).getHours();
@@ -56,12 +57,10 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
             }
       });
 
+      const getDate = changeIOSstring?.map(item => (item.date))
       const checkDate = changeIOSstring?.filter(item => date?.includes(item.date))
-      console.log("checkDate:", checkDate);
-
-      const inputStyle = "border border-gray-300 w-48 h-10 px-3 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-500";
-      const inputContainer = "flex flex-col";
-      const selectStyle = "w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500";
+      // Output: array of hasDuplicate dates
+      const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
 
       const handleOnchange = (e) => {
             const { name, value } = e.target;
@@ -71,6 +70,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       const bookAppointment = async () => {
             const { message, key } = await createAppointmentValidate(appointmentData);
             setErrorMessage({ [key]: message });
+            console.log("Message: ", message);
             if (message) return;
             console.log("bookAppointmentData: ", appointmentData);
             useCreateMutation.mutate(appointmentData, {
@@ -78,6 +78,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                         queryClient.invalidateQueries({
                               queryKey: ['appointments']
                         })
+                        setAppointmentData({})
                         toast('Appointment success!');
                         setOpen();
                   },
@@ -104,7 +105,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                                           name='username'
                                           onChange={handleOnchange}
                                     />
-                                    <span className="text-red-500 text-sm ml-4">{errorMessage.name}</span>
+                                    <span className="text-red-500 text-sm ml-4">{errorMessage.username}</span>
                               </div>
                               <div className='flex justify-between mt-5'>
                                     <div className={inputContainer}>
@@ -138,27 +139,31 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                                     <div className={inputContainer}>
                                           <Label>Your Phone <span className='text-red-500'>*</span><span className='text-red-500'></span></Label>
                                           <input
-                                                type="text"
+                                                type="number"
                                                 className={inputStyle}
                                                 placeholder='Your Phone'
                                                 name='phone_number'
                                                 onChange={handleOnchange}
                                           />
-                                          <span className="text-red-500 text-sm ml-4">{errorMessage.phone}</span>
+                                          <span className="text-red-500 text-sm ml-4">{errorMessage.phone_number}</span>
                                     </div>
                               </div>
-                              <div className='flex mt-5 justify-between'>
+                              <div className='flex mt-5 justify-between mb-1'>
                                     <div className="flex flex-col">
                                           <Label>Date <span className='text-red-500'>*</span></Label>
-                                          <input
-                                                min={today}
-                                                max={twoWeek}
-                                                type="date"
-                                                className={inputStyle}
-                                                placeholder=''
-                                                name='date'
-                                                onChange={(e) => setDate(e.target.value)}
-                                          />
+                                          <Select onValueChange={(value) => setDate(value)} >
+                                                <SelectTrigger className={selectStyle} >
+                                                      <SelectValue
+                                                            placeholder="Date"
+                                                      />
+                                                </SelectTrigger>
+
+                                                <SelectContent className="bg-[#fff]">
+                                                      {hasDuplicates?.map(item => (
+                                                            <SelectItem value={item}>{item}</SelectItem>
+                                                      ))}
+                                                </SelectContent>
+                                          </Select>
                                           <span className="text-red-500 text-sm ml-4">{errorMessage.date}</span>
                                     </div>
                                     <div className={inputContainer}>
@@ -177,7 +182,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                                                       ))}
                                                 </SelectContent>
                                           </Select>
-                                          <span className="text-red-500 text-sm ml-4">{errorMessage.time}</span>
+                                          <span className="text-red-500 text-sm ml-4">{errorMessage.slot}</span>
                                     </div>
                                     <div className={inputContainer}>
                                           <Label>Gender <span className='text-red-500'>*</span></Label>
@@ -194,6 +199,17 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                                           </Select>
                                           <span className="text-red-500 text-sm ml-4">{errorMessage.gender}</span>
                                     </div>
+                              </div>
+                              <div className={inputContainer}>
+                                    <Label>Your Age <span className='text-red-500'>*</span><span className='text-red-500'></span></Label>
+                                    <input
+                                          type="number"
+                                          className={inputStyle}
+                                          placeholder='Your Age'
+                                          name='age'
+                                          onChange={handleOnchange}
+                                    />
+                                    <span className="text-red-500 text-sm ml-4">{errorMessage.age}</span>
                               </div>
                               <div className='mt-5'>
                                     <Label>Comments</Label>
@@ -217,4 +233,4 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       )
 }
 
-export default AppointmentCreateRoute
+export default AppointmentCreateRoute;
