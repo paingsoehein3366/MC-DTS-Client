@@ -7,7 +7,6 @@ import DoctorCreateRoute from "./doctor-create-route";
 import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
 import { Loading } from "@/components";
-import { ToastContainer } from "react-toastify";
 
 const DoctorListRoute = () => {
 	const { data: lists, isLoading, error } = useGetAllDoctors();
@@ -24,7 +23,7 @@ const DoctorListRoute = () => {
 				</Button>
 			</div>
 			{isLoading && <Loading />}
-			<div className="grid grid-cols-5 gap-3">
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 				{lists &&
 					lists?.data.map((doctor) => (
 						<Card key={doctor._id}>
