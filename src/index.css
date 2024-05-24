@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.blob {
-    border-radius: 73% 25% 31% 25% / 63% 25% 63% 37%;
+a.active {
+    color: blue;
+    font-weight: bold;
+    border-bottom: 2px solid blue;
 }

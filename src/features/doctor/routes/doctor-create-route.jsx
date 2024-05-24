@@ -1,6 +1,5 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
-// import { useCreateDoctor } from "../api/create-doctor-api";
 import {
 	Select,
 	SelectContent,
