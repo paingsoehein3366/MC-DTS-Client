@@ -1,3 +1,4 @@
-import { useAppointmentCreate, appointmentCreate } from './appointment-create-api'
+import { useAppointmentCreate, appointmentCreate } from './appointment-create-api';
+import { useAppointmentUpdate } from './appointment-update-api';
 
-export { useAppointmentCreate, appointmentCreate }
+export { useAppointmentCreate, appointmentCreate, useAppointmentUpdate }

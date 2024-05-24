@@ -151,38 +151,77 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                               <div className='flex mt-5 justify-between mb-1'>
                                     <div className="flex flex-col">
                                           <Label>Date <span className='text-red-500'>*</span></Label>
-                                          <Select onValueChange={(value) => setDate(value)} >
-                                                <SelectTrigger className={selectStyle} >
-                                                      <SelectValue
-                                                            placeholder="Date"
-                                                      />
-                                                </SelectTrigger>
+                                          {!hasDuplicates?.length ?
+                                                (
+                                                      <Select onValueChange={(value) => setDate(value)} >
+                                                            <SelectTrigger className="w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500 cursor-not-allowed opacity-25" >
+                                                                  <SelectValue
+                                                                        placeholder="Date"
+                                                                  />
+                                                            </SelectTrigger>
 
-                                                <SelectContent className="bg-[#fff]">
-                                                      {hasDuplicates?.map(item => (
-                                                            <SelectItem value={item}>{item}</SelectItem>
-                                                      ))}
-                                                </SelectContent>
-                                          </Select>
-                                          <span className="text-red-500 text-sm ml-4">{errorMessage.date}</span>
+                                                            <SelectContent className="bg-[#fff]">
+                                                                  {hasDuplicates?.map(item => (
+                                                                        <SelectItem value={item}>{item}</SelectItem>
+                                                                  ))}
+                                                            </SelectContent>
+                                                      </Select>
+                                                ) :
+                                                (
+                                                      <>
+                                                            <Select onValueChange={(value) => setDate(value)}>
+                                                                  <SelectTrigger className={selectStyle}>
+                                                                        <SelectValue
+                                                                              placeholder="Date" />
+                                                                  </SelectTrigger>
+
+                                                                  <SelectContent className="bg-[#fff]">
+                                                                        {hasDuplicates?.map(item => (
+                                                                              <SelectItem value={item}>{item}</SelectItem>
+                                                                        ))}
+                                                                  </SelectContent>
+                                                            </Select>
+                                                            <span className="text-red-500 text-sm ml-4">{errorMessage.date}</span>
+                                                      </>
+
+                                                )
+                                          }
                                     </div>
                                     <div className={inputContainer}>
                                           <Label>Time <span className='text-red-500'>*</span></Label>
-                                          <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
-                                                <SelectTrigger className={selectStyle}>
-                                                      <SelectValue
-                                                            placeholder="Time"
-                                                            name='slot'
-                                                            onChange={handleOnchange}
-                                                      />
-                                                </SelectTrigger>
-                                                <SelectContent className="bg-[#fff]">
-                                                      {checkDate?.map(item => (
-                                                            <SelectItem value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
-                                                      ))}
-                                                </SelectContent>
-                                          </Select>
-                                          <span className="text-red-500 text-sm ml-4">{errorMessage.slot}</span>
+                                          {!checkDate?.length ?
+                                                (<Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
+                                                      <SelectTrigger className="w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500 cursor-not-allowed opacity-25">
+                                                            <SelectValue
+                                                                  placeholder="Time"
+                                                                  name='slot'
+                                                                  onChange={handleOnchange}
+                                                            />
+                                                      </SelectTrigger>
+                                                      <SelectContent className="bg-[#fff]">
+                                                            {checkDate?.map(item => (
+                                                                  <SelectItem className='	' value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
+                                                            ))}
+                                                      </SelectContent>
+                                                </Select>)
+                                                :
+
+                                                (<>
+                                                      <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
+                                                            <SelectTrigger className="w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500">
+                                                                  <SelectValue
+                                                                        placeholder="Time"
+                                                                        name='slot'
+                                                                        onChange={handleOnchange} />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-[#fff]">
+                                                                  {checkDate?.map(item => (
+                                                                        <SelectItem key={item.id} value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
+                                                                  ))}
+                                                            </SelectContent>
+                                                      </Select><span className="text-red-500 text-sm ml-4">{errorMessage.slot}</span>
+                                                </>)
+                                          }
                                     </div>
                                     <div className={inputContainer}>
                                           <Label>Gender <span className='text-red-500'>*</span></Label>
