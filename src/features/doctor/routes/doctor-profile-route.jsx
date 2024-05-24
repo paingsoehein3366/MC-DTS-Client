@@ -23,6 +23,7 @@ const DoctorProfileRoute = () => {
 	const slots = data?.data?.slots;
 	return (
 		<div>
+			<ToastContainer />
 			{isLoading && <Loading />}
 			{doctorValue && (
 				<Card>
@@ -63,12 +64,10 @@ const DoctorProfileRoute = () => {
 								:
 								<DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />
 							}
-
 						</div>
 					</div>
 				</Card>
 			)}
-			<ToastContainer />
 		</div>
 	);
 };

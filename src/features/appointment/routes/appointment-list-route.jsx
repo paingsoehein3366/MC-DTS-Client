@@ -24,16 +24,20 @@ import AppointmentDeleteRoute from './appointment-delete-route';
 import { useGetAllAppointments } from '../api/appointment-get-api';
 import { useGetAllDoctors } from '@/features/doctor/api/get-all-doctors-api';
 import { ToastContainer } from 'react-toastify';
+import UpdateIcon from '@/components/icons/update-icon';
+import AppointmentUpdateRoute from './appointment-update-route';
 
 const AppointmentListRoute = () => {
       const [patientData, setPatientData] = useState();
+      const [patientDate, setPatientDate] = useState();
       const [openAppointment, setOpenAppointment] = useState(false);
       const [patientProfileOpen, setPatientProfileOpen] = useState(false);
       const [patientDeleteOpen, setPatientDeleteOpen] = useState(false);
+      const [patientUpdateOpen, setPatientUpdateOpen] = useState(false);
       const [appointmentId, setAppointmentId] = useState();
       const { data } = useGetAllAppointments();
       const { data: DoctorData } = useGetAllDoctors();
-
+      console.log("Data: ", data?.data);
       // appointments/doctorId/
       return (
             <div>
@@ -76,7 +80,7 @@ const AppointmentListRoute = () => {
                                     const date = new Date(item?.slot?.end_date).toISOString().substring(0, 10)
                                     return (
                                           <TableRow>
-                                                <TableCell className="">{item.username}</TableCell>
+                                                <TableCell className="">{item?.username}</TableCell>
                                                 <TableCell className="">{item.email}</TableCell>
                                                 <TableCell className="">{item.age}</TableCell>
                                                 <TableCell className="">{date}</TableCell>
@@ -84,6 +88,7 @@ const AppointmentListRoute = () => {
                                                 <TableCell className="">Dr.{item?.doctor?.name}</TableCell>
                                                 <TableCell className="">$250.00</TableCell>
                                                 <Button
+                                                      className="w-8 h-8 text-green-500 hover:bg-green-400 rounded-[20px] hover:text-white p-1"
                                                       onClick={() => {
                                                             setPatientProfileOpen(true);
                                                             setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate, gender: item.gender })
@@ -92,6 +97,17 @@ const AppointmentListRoute = () => {
                                                       <EyeIcon />
                                                 </Button>
                                                 <Button
+                                                      className="text-blue-400 hover:bg-blue-400 rounded-[20px] hover:text-white p-1 w-8 h-8"
+                                                      onClick={() => {
+                                                            setPatientUpdateOpen(true);
+                                                            setPatientDate({ date, time: `${startDate}:${endDate}` });
+                                                            setPatientData(item);
+                                                      }}
+                                                >
+                                                      <UpdateIcon />
+                                                </Button>
+                                                <Button
+                                                      className="p-2"
                                                       onClick={() => {
                                                             setPatientDeleteOpen(true);
                                                             setAppointmentId(item.id)
@@ -107,6 +123,7 @@ const AppointmentListRoute = () => {
                   <AppointmentCreateRoute open={openAppointment} setOpen={() => setOpenAppointment(false)} doctorData={DoctorData} />
                   <PatientProfile open={patientProfileOpen} setOpen={() => setPatientProfileOpen(false)} patientData={patientData} />
                   <AppointmentDeleteRoute open={patientDeleteOpen} setOpen={() => setPatientDeleteOpen(false)} appointmentId={appointmentId} />
+                  <AppointmentUpdateRoute open={patientUpdateOpen} setOpen={() => setPatientUpdateOpen(false)} patientData={patientData} doctorData={DoctorData} patientDate={patientDate} />
                   <ToastContainer />
             </div>
       )
