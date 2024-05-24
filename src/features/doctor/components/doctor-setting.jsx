@@ -18,6 +18,7 @@ import { updateDoctorSchema } from '../schema/doctor-update-schema';
 const DoctorSetting = ({ doctorValue, doctorId }) => {
       console.log("doctorId: ", doctorId);
       const [doctorInputValue, setDoctorInputValue] = useState(doctorValue);
+      console.log("doctorInputValue: ", doctorInputValue);
       const [errorMessage, setErrorMessage] = useState({});
       const [open, setOpen] = useState(false);
 
@@ -42,7 +43,7 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
             useDoctorUpdateMutation.mutate({ id: doctorId, data: doctorInputValue }, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
-                              queryKey: ['doctors']
+                              queryKey: ['slots']
                         }),
                               toast('Doctor update success')
                         console.log("success");
