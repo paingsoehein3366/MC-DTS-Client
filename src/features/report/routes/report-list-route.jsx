@@ -1,9 +1,4 @@
-import * as React from "react";
 import {
-	// ColumnDef,
-	// ColumnFiltersState,
-	// SortingState,
-	// VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
@@ -11,7 +6,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,9 +14,6 @@ import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -34,99 +26,9 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import CSV from "../../../assets/csv.jpg";
-
-const data = [
-	{
-		name: "John Doe",
-		email: "john.doe@example.com",
-		age: 30,
-		date: "2024-05-20",
-		time: "10:00 AM",
-		doctor: "dr. smith",
-		fees: 150,
-	},
-	{
-		name: "Jane Smith",
-		email: "jane.smith@example.com",
-		age: 25,
-		date: "2024-05-21",
-		time: "11:00 AM",
-		doctor: "dr. johnson",
-		fees: 200,
-	},
-	{
-		name: "Alice Johnson",
-		email: "alice.johnson@example.com",
-		age: 28,
-		date: "2024-05-22",
-		time: "09:30 AM",
-		doctor: "dr. williams",
-		fees: 180,
-	},
-	{
-		name: "Bob Brown",
-		email: "bob.brown@example.com",
-		age: 35,
-		date: "2024-05-23",
-		time: "02:00 PM",
-		doctor: "dr. brown",
-		fees: 220,
-	},
-	{
-		name: "Eve White",
-		email: "eve.white@example.com",
-		age: 32,
-		date: "2024-05-24",
-		time: "10:30 AM",
-		doctor: "dr. davis",
-		fees: 170,
-	},
-	{
-		name: "Frank Green",
-		email: "frank.green@example.com",
-		age: 29,
-		date: "2024-05-25",
-		time: "03:00 PM",
-		doctor: "dr. miller",
-		fees: 160,
-	},
-	{
-		name: "Grace Blue",
-		email: "grace.blue@example.com",
-		age: 40,
-		date: "2024-05-26",
-		time: "12:00 PM",
-		doctor: "dr. wilson",
-		fees: 210,
-	},
-	{
-		name: "Henry Black",
-		email: "henry.black@example.com",
-		age: 45,
-		date: "2024-05-27",
-		time: "01:00 PM",
-		doctor: "dr. moore",
-		fees: 230,
-	},
-	{
-		name: "Ivy Yellow",
-		email: "ivy.yellow@example.com",
-		age: 33,
-		date: "2024-05-28",
-		time: "04:00 PM",
-		doctor: "dr. taylor",
-		fees: 190,
-	},
-	{
-		name: "Jack Red",
-		email: "jack.red@example.com",
-		age: 50,
-		date: "2024-05-29",
-		time: "10:15 AM",
-		doctor: "dr. anderson",
-		fees: 240,
-	},
-];
+import { useGetAllReports } from "../api";
+import { useState, useMemo } from "react";
+import { CSVLink, CSVDownload } from "react-csv";
 
 const columns = [
 	{
@@ -164,7 +66,7 @@ const columns = [
 			return (
 				<Button
 					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					// onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					Email
 					<ArrowUpDown className="ml-2 h-4 w-4" />
@@ -203,61 +105,32 @@ const columns = [
 			return <Button variant="ghost">Fees</Button>;
 		},
 	},
-	// {
-	// 	accessorKey: "amount",
-	// 	header: () => <div className="text-right">Amount</div>,
-	// 	cell: ({ row }) => {
-	// 		const amount = parseFloat(row.getValue("amount"));
-
-	// 		// Format the amount as a dollar amount
-	// 		const formatted = new Intl.NumberFormat("en-US", {
-	// 			style: "currency",
-	// 			currency: "USD",
-	// 		}).format(amount);
-
-	// 		return <div className="text-right font-medium">{formatted}</div>;
-	// 	},
-	// },
-
-	// {
-	// 	id: "actions",
-	// 	enableHiding: false,
-	// 	cell: ({ row }) => {
-	// 		const payment = row.original;
-
-	// 		return (
-	// 			<DropdownMenu>
-	// 				<DropdownMenuTrigger asChild>
-	// 					<Button variant="ghost" className="h-8 w-8 p-0">
-	// 						<span className="sr-only">Open menu</span>
-	// 						<MoreHorizontal className="h-4 w-4" />
-	// 					</Button>
-	// 				</DropdownMenuTrigger>
-	// 				<DropdownMenuContent align="end">
-	// 					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-	// 					<DropdownMenuItem
-	// 						onClick={() => navigator.clipboard.writeText(payment.id)}
-	// 					>
-	// 						Copy payment ID
-	// 					</DropdownMenuItem>
-	// 					<DropdownMenuSeparator />
-	// 					<DropdownMenuItem>View customer</DropdownMenuItem>
-	// 					<DropdownMenuItem>View payment details</DropdownMenuItem>
-	// 				</DropdownMenuContent>
-	// 			</DropdownMenu>
-	// 		);
-	// 	},
-	// },
 ];
 
 const ReportListRoute = () => {
-	const [sorting, setSorting] = React.useState([]);
-	const [columnFilters, setColumnFilters] = React.useState([]);
-	const [columnVisibility, setColumnVisibility] = React.useState({});
-	const [rowSelection, setRowSelection] = React.useState({});
+	const { data: reports } = useGetAllReports();
+
+	const reportData = useMemo(
+		() =>
+			reports?.data?.map((report) => ({
+				name: report.username,
+				email: report.email,
+				age: report.age,
+				date: new Date(report.slot.start_date).toISOString().substring(0, 10),
+				time: `${new Date(report.slot.start_date).getHours()}:${new Date(report.slot.start_date).getMinutes()} - ${new Date(report.slot.end_date).getHours()}:${new Date(report.slot.end_date).getMinutes()}`,
+				doctor: report.doctor.name,
+				fees: "200",
+			})) || [],
+		[reports?.data],
+	);
+
+	const [sorting, setSorting] = useState([]);
+	const [columnFilters, setColumnFilters] = useState([]);
+	const [columnVisibility, setColumnVisibility] = useState({});
+	const [rowSelection, setRowSelection] = useState({});
 
 	const table = useReactTable({
-		data,
+		data: reportData,
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -275,12 +148,25 @@ const ReportListRoute = () => {
 		},
 	});
 
+
+	const selectedRows = table.getSelectedRowModel().rows;
+    const csvData = selectedRows.map((row) => {
+        const rowData = row.original;
+        const visibleData = {};
+        Object.keys(rowData).forEach((key) => {
+            if (table.getColumn(key)?.getIsVisible()) {
+                visibleData[key] = rowData[key];
+            }
+        });
+        return visibleData;
+    });
+
 	return (
 		<>
 			<div className="flex justify-end">
-				<button className="border border-black px-8 py-1">
+				<CSVLink data={csvData} className="border border-black px-8 py-1">
 					<img className="w-[30px]" src={CSV} alt="" />
-				</button>
+				</CSVLink>
 			</div>
 			<div className="w-full">
 				<div className="flex items-center py-4">
@@ -326,7 +212,7 @@ const ReportListRoute = () => {
 								<TableRow key={headerGroup.id}>
 									{headerGroup.headers.map((header) => {
 										return (
-											<TableHead key={header.id}>
+											<TableHead className="text-center" key={header.id}>
 												{header.isPlaceholder ? null : (
 													flexRender(
 														header.column.columnDef.header,
@@ -343,6 +229,7 @@ const ReportListRoute = () => {
 							{table.getRowModel().rows?.length ?
 								table.getRowModel().rows.map((row) => (
 									<TableRow
+										className="text-center"
 										key={row.id}
 										data-state={row.getIsSelected() && "selected"}
 									>
