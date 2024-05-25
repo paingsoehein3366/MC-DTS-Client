@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import React from 'react'
 import { useDoctorDelete } from '../api/doctor-delete-api';
 import { queryClient } from '@/lib/react-query';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const DoctorDelete = ({ open, setOpen, doctorId }) => {

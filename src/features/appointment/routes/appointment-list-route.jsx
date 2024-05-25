@@ -23,7 +23,6 @@ import DeleteIcon from '../components/delete-icon';
 import AppointmentDeleteRoute from './appointment-delete-route';
 import { useGetAllAppointments } from '../api/appointment-get-api';
 import { useGetAllDoctors } from '@/features/doctor/api/get-all-doctors-api';
-import { ToastContainer } from 'react-toastify';
 import UpdateIcon from '@/components/icons/update-icon';
 import AppointmentUpdateRoute from './appointment-update-route';
 
@@ -124,7 +123,6 @@ const AppointmentListRoute = () => {
                   <PatientProfile open={patientProfileOpen} setOpen={() => setPatientProfileOpen(false)} patientData={patientData} />
                   <AppointmentDeleteRoute open={patientDeleteOpen} setOpen={() => setPatientDeleteOpen(false)} appointmentId={appointmentId} />
                   <AppointmentUpdateRoute open={patientUpdateOpen} setOpen={() => setPatientUpdateOpen(false)} patientData={patientData} doctorData={DoctorData} patientDate={patientDate} />
-                  <ToastContainer />
             </div>
       )
 }
