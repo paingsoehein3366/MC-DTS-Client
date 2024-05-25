@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Button } from '@/components/ui/button';
 import DoctorDelete from './doctor-delete';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDoctorUpdate } from '../api/doctor-update-api';
 import { queryClient } from '@/lib/react-query';
 import { updateDoctorSchema } from '../schema/doctor-update-schema';
@@ -197,7 +197,6 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
                         </div>
                   </div>
                   <DoctorDelete open={open} setOpen={() => setOpen(false)} doctorId={doctorId} />
-                  <ToastContainer />
             </div>
       )
 }

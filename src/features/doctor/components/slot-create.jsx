@@ -13,7 +13,7 @@ import EditIcon from './edit-icon';
 import DeleteIcon from '@/features/appointment/components/delete-icon';
 import SlotRemove from './slot-remove';
 import { useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useGetAllAppointments } from '@/features/appointment/api/appointment-get-api';
 
 const SlotCreate = ({ slots, doctorId }) => {
@@ -233,7 +233,6 @@ const SlotCreate = ({ slots, doctorId }) => {
                   </div>
                   <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={editSlot} />
                   <SlotRemove open={openRemove} setOpen={() => setOpenRemove(false)} slotId={removeSlot?.id} />
-                  <ToastContainer />
             </div>
       )
 }

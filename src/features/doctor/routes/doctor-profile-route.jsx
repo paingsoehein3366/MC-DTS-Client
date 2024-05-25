@@ -7,7 +7,6 @@ import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
 import { Loading } from "@/components";
 import DoctorSetting from "../components/doctor-setting";
-import { ToastContainer } from "react-toastify";
 
 const DoctorProfileRoute = () => {
 	const paramsId = useParams().doctorId;
@@ -23,7 +22,6 @@ const DoctorProfileRoute = () => {
 	const slots = data?.data?.slots;
 	return (
 		<div>
-			<ToastContainer />
 			{isLoading && <Loading />}
 			{doctorValue && (
 				<Card>

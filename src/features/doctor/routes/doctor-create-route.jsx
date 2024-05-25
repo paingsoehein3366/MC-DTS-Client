@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { createDoctorValidate } from "../schema/doctor-create-schema";
 import { useCreateDoctor } from "../api/create-doctor-api";
 import { queryClient } from "@/lib/react-query";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const DoctorCreateRoute = ({ open, setOpen }) => {
 	const [doctorInputValue, setDoctorInputValue] = useState({
@@ -226,7 +226,6 @@ const DoctorCreateRoute = ({ open, setOpen }) => {
 					</div>
 				</DialogContent>
 			</Dialog>
-			<ToastContainer />
 		</>
 	);
 };
