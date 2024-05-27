@@ -12,6 +12,7 @@ import SlotRemove from "./slot-remove";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useGetAllAppointments } from "@/features/appointment/api/appointment-get-api";
+import SlotCheckIcon from "./slot-check-icon";
 
 const SlotCreate = ({ slots, doctorId }) => {
 	const [dateAndTimeData, setDateAndTimeData] = useState({
@@ -70,17 +71,28 @@ const SlotCreate = ({ slots, doctorId }) => {
 				":" +
 				(getEndMinutes < 10 ? "0" + getEndMinutes.toString() : getEndMinutes),
 
-                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
-                  id: item._id
-            }
-      });
-      useEffect(() => {
-            setAllSlots(getSlot);
-      }, []);
+			date:
+				getDate.split("-")[0] +
+				"-" +
+				getDate.split("-")[1] +
+				"-" +
+				Number(getDate.split("-")[2]),
+			id: item._id,
+		};
+	});
+	useEffect(() => {
+		setAllSlots(getSlot);
+	}, []);
 
 	//Check slot isAppointment
-	const checkSlot = appointments?.data?.data.map((item) => item.slot);
-	console.log("checkSlot: ", checkSlot);
+	const getSlotId = getSlot?.map((item) => item.id);
+	const checkSlotIsAppointment = appointments?.data?.data.filter((item) =>
+		getSlotId.includes(item.slot._id),
+	);
+	const checkSlotIsAppointmentId = checkSlotIsAppointment?.map(
+		(item) => item.slot._id,
+	);
+	console.log("checkSlotIsAppointmentId: ", checkSlotIsAppointmentId);
 	// Check Date
 	const checkDate = getSlot?.filter((item) => searchSlot.includes(item.date));
 
@@ -129,6 +141,7 @@ const SlotCreate = ({ slots, doctorId }) => {
 			},
 		});
 	};
+
 	// All Slots
 	const AllSlots = () => {
 		setSearchSlot("");
@@ -230,7 +243,59 @@ const SlotCreate = ({ slots, doctorId }) => {
 					{allSlots?.length ?
 						!allSlots?.length ?
 							<h1>not slot</h1>
-						:	getSlot?.map((tag) => (
+						:	getSlot?.map((tag) => {
+								const isAppointment = checkSlotIsAppointmentId.includes(tag.id);
+								return (
+									<div
+										key={tag.id}
+										className="flex justify-center items-center my-2"
+									>
+										<TableBody className="flex">
+											<TableCell className="">{tag.date}</TableCell>
+											<TableCell>{tag.startDate}</TableCell>
+											<TableCell>-</TableCell>
+											<TableCell>{tag.endDate}</TableCell>
+										</TableBody>
+										<button
+											onClick={() => {
+												setEditSlot({
+													startDate: tag.startDate,
+													endDate: tag.endDate,
+													date: tag.date,
+													id: tag.id,
+													doctorId,
+												});
+												setOpen(true);
+											}}
+											className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400"}`}
+											disabled={isAppointment}
+										>
+											<EditIcon />
+										</button>
+
+										<button
+											onClick={() => {
+												setRemoveSlot({ id: tag.id });
+												setOpenRemove(true);
+											}}
+											className="w-6 h-6 ml-4"
+											disabled={isAppointment}
+										>
+											{isAppointment ?
+												<SlotCheckIcon />
+											:	<DeleteIcon />}
+										</button>
+									</div>
+								);
+							})
+
+					: !checkDate?.length ?
+						<h1 className="text-xl text-red-400 flex justify-center items-center h-60">
+							Not Slot
+						</h1>
+					:	checkDate?.map((tag) => {
+							const isAppointment = checkSlotIsAppointmentId.includes(tag.id);
+							return (
 								<div
 									key={tag.id}
 									className="flex justify-center items-center my-2"
@@ -241,7 +306,6 @@ const SlotCreate = ({ slots, doctorId }) => {
 										<TableCell>-</TableCell>
 										<TableCell>{tag.endDate}</TableCell>
 									</TableBody>
-									{checkDate}
 									<button
 										onClick={() => {
 											setEditSlot({
@@ -253,7 +317,8 @@ const SlotCreate = ({ slots, doctorId }) => {
 											});
 											setOpen(true);
 										}}
-										className="rounded-[7px]  text-blue-400 ml-6"
+										className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400"}`}
+										disabled={isAppointment}
 									>
 										<EditIcon />
 									</button>
@@ -263,56 +328,20 @@ const SlotCreate = ({ slots, doctorId }) => {
 											setOpenRemove(true);
 										}}
 										className="w-6 h-6 ml-4"
+										disabled={isAppointment}
 									>
-										<DeleteIcon />
+										{isAppointment ?
+											<SlotCheckIcon />
+										:	<DeleteIcon />}
 									</button>
 								</div>
-							))
-
-					: !checkDate?.length ?
-						<h1 className="text-xl text-red-400 flex justify-center items-center h-60">
-							Not Slot
-						</h1>
-					:	checkDate?.map((tag) => (
-							<div
-								key={tag.id}
-								className="flex justify-center items-center my-2"
-							>
-								<TableBody className="flex">
-									<TableCell className="">{tag.date}</TableCell>
-									<TableCell>{tag.startDate}</TableCell>
-									<TableCell>-</TableCell>
-									<TableCell>{tag.endDate}</TableCell>
-								</TableBody>
-								<button
-									onClick={() => {
-										setEditSlot({
-											startDate: tag.startDate,
-											endDate: tag.endDate,
-											date: tag.date,
-											id: tag.id,
-											doctorId,
-										});
-										setOpen(true);
-									}}
-									className="  rounded-[7px]  text-blue-400 ml-6"
-								>
-									<EditIcon />
-								</button>
-								<button
-									onClick={() => {
-										setRemoveSlot({ id: tag.id });
-										setOpenRemove(true);
-									}}
-									className="w-6 h-6 ml-4"
-								>
-									<DeleteIcon />
-								</button>
-							</div>
-						))
+							);
+						})
 					}
 				</ScrollArea>
 			</div>
+			{/* checkIsAppointmentThisSlot */}
+
 			<SlotEdit
 				slotEditDialogBoxOpen={open}
 				setSlotEditDialogBoxOpen={() => setOpen(false)}
