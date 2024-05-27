@@ -2,19 +2,20 @@ import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { slotCreateSchema } from "../schema/slot-create-schema";
-import SlotEdit from "./slot-edit";
+import SlotUpdate from "./update-slot-route";
 import { useSlotCreate } from "../api/create-slot-api";
 import { queryClient } from "@/lib/react-query";
 import { TableBody, TableCell } from "@/components/ui/table";
-import EditIcon from "./edit-icon";
+import EditIcon from "./../components/edit-icon";
 import DeleteIcon from "@/features/appointment/components/delete-icon";
-import SlotRemove from "./slot-remove";
+import SlotDelete from "./delete-slot-route";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useGetAllAppointments } from "@/features/appointment/api/appointment-get-api";
-import SlotCheckIcon from "./slot-check-icon";
+import SlotCheckIcon from "./../components/slot-check-icon";
+import { useGetSlotDoctor } from "../api/get-slot-doctor-api";
 
-const SlotCreate = ({ slots, doctorId }) => {
+const SlotCreateRoute = ({ doctorId }) => {
 	const [dateAndTimeData, setDateAndTimeData] = useState({
 		date: "",
 		startTime: "",
@@ -33,9 +34,11 @@ const SlotCreate = ({ slots, doctorId }) => {
 		marginLeft: 6,
 	});
 
+	const { data: slots } = useGetSlotDoctor(doctorId);
+	console.log("Slots: ", slots?.data);
+
 	const useSlotCreateMutation = useSlotCreate();
 	const { data: appointments } = useGetAllAppointments();
-	console.log("appointment: ", appointments);
 
 	const startHour = parseInt(dateAndTimeData.startTime);
 	const startMinute = dateAndTimeData.startTime.split(":")[1];
@@ -48,8 +51,15 @@ const SlotCreate = ({ slots, doctorId }) => {
 		.toISOString()
 		.split("T")[0];
 
+	// Filter Slots
+	const filterSlots = slots?.data?.filter((slot) => {
+		const currentDate = new Date();
+		const startDate = new Date(slot.start_date);
+		const endDate = new Date(slot.end_date);
+		return startDate >= currentDate && endDate >= currentDate;
+	});
 	// Get Slot
-	const getSlot = slots?.map((item) => {
+	const getSlot = filterSlots?.map((item) => {
 		const getStartHours = new Date(item.start_date).getHours();
 		const getStartMinutes = new Date(item.start_date).getMinutes();
 
@@ -65,12 +75,10 @@ const SlotCreate = ({ slots, doctorId }) => {
 				(getStartMinutes < 10 ?
 					"0" + getStartMinutes.toString()
 				:	getStartMinutes),
-
 			endDate:
 				(getEndHours < 10 ? "0" + getEndHours.toString() : getEndHours) +
 				":" +
 				(getEndMinutes < 10 ? "0" + getEndMinutes.toString() : getEndMinutes),
-
 			date:
 				getDate.split("-")[0] +
 				"-" +
@@ -80,11 +88,12 @@ const SlotCreate = ({ slots, doctorId }) => {
 			id: item._id,
 		};
 	});
+
 	useEffect(() => {
 		setAllSlots(getSlot);
 	}, []);
 
-	//Check slot isAppointment
+      //Check slot isAppointment
 	const getSlotId = getSlot?.map((item) => item.id);
 	const checkSlotIsAppointment = appointments?.data?.data.filter((item) =>
 		getSlotId?.includes(item.slot._id),
@@ -92,7 +101,6 @@ const SlotCreate = ({ slots, doctorId }) => {
 	const checkSlotIsAppointmentId = checkSlotIsAppointment?.map(
 		(item) => item.slot._id,
 	);
-	console.log("checkSlotIsAppointmentId: ", checkSlotIsAppointmentId);
 	// Check Date
 	const checkDate = getSlot?.filter((item) => searchSlot?.includes(item.date));
 
@@ -244,7 +252,9 @@ const SlotCreate = ({ slots, doctorId }) => {
 						!allSlots?.length ?
 							<h1>not slot</h1>
 						:	getSlot?.map((tag) => {
-								const isAppointment = checkSlotIsAppointmentId?.includes(tag.id);
+								const isAppointment = checkSlotIsAppointmentId?.includes(
+									tag.id,
+								);
 								return (
 									<div
 										key={tag.id}
@@ -342,12 +352,12 @@ const SlotCreate = ({ slots, doctorId }) => {
 			</div>
 			{/* checkIsAppointmentThisSlot */}
 
-			<SlotEdit
+			<SlotUpdate
 				slotEditDialogBoxOpen={open}
 				setSlotEditDialogBoxOpen={() => setOpen(false)}
 				data={editSlot}
 			/>
-			<SlotRemove
+			<SlotDelete
 				open={openRemove}
 				setOpen={() => setOpenRemove(false)}
 				slotId={removeSlot?.id}
@@ -356,4 +366,4 @@ const SlotCreate = ({ slots, doctorId }) => {
 	);
 };
 
-export default SlotCreate;
+export default SlotCreateRoute;

@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useUpdateSlot } from '../api/update-slot-api';
 
-const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => {
+const SlotUpdate = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => {
+      console.log("data: ", data);
       const [updateSlotData, setUpdateSlotData] = useState({});
       const useUpdateMutation = useUpdateSlot();
       const inputStyle = 'border p-2   rounded-[7px] mx-2 focus:outline-none focus:border-blue-500';
@@ -67,4 +68,4 @@ const SlotEdit = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => 
       )
 }
 
-export default SlotEdit
+export default SlotUpdate

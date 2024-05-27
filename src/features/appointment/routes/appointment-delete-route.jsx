@@ -12,7 +12,6 @@ import { useAppointmentDelete } from "../api/appointment-delete-api";
 import DeleteIcon from "../components/delete-icon"
 
 export default function AppointmentDeleteRoute({ open, setOpen, appointmentId }) {
-      console.log("appointmentId: ", appointmentId);
       const useAppointmentDeleteMutation = useAppointmentDelete();
       const AppointmentDelete = () => {
             useAppointmentDeleteMutation.mutate(appointmentId, {
