@@ -201,7 +201,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                                                       setOpenRemove(true);
                                                 }}
                                                       className='w-6 h-6 ml-4'>
-                                                      {!checkSlotIsAppointmentId?.map(item => item === tag.id) ?
+                                                      {checkSlotIsAppointmentId?.map(item => item === tag.id) ?
                                                             <SlotCheckIcon />
                                                             :
                                                             <DeleteIcon />
