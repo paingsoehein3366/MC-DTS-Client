@@ -44,7 +44,8 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       const inputContainer = "flex flex-col";
       const selectStyle = "w-48 rounded-[7px] mt-2 border-gray-300 focus:outline-none focus:border-blue-500";
 
-      const changeIOSstring = data?.data?.slots?.map(item => {
+      const checkCurrentDate = data?.data?.slots?.filter(item => item.start_date > new Date().toISOString());
+      const changeIOSstring = checkCurrentDate?.map(item => {
             const startHour = new Date(item.start_date).getHours();
             const startMinute = new Date(item.start_date).getMinutes();
             const endHour = new Date(item.end_date).getHours();
@@ -57,11 +58,12 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
             }
       });
 
-      const getDate = changeIOSstring?.map(item => (item.date))
-      const checkDate = changeIOSstring?.filter(item => date?.includes(item.date))
-      // Output: array of hasDuplicate dates
-      const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
+      const getDate = changeIOSstring?.map(item => (item.date));
+      const checkDate = changeIOSstring?.filter(item => date?.includes(item.date));
 
+      // Output: array of hasDuplicate dates;
+      const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
+      console.log("hasDuplicates: ", hasDuplicates);
       const handleOnchange = (e) => {
             const { name, value } = e.target;
             setAppointmentData({ ...appointmentData, [name]: value })
@@ -199,9 +201,6 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                                                             />
                                                       </SelectTrigger>
                                                       <SelectContent className="bg-[#fff]">
-                                                            {checkDate?.map(item => (
-                                                                  <SelectItem className='	' value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
-                                                            ))}
                                                       </SelectContent>
                                                 </Select>)
                                                 :

@@ -70,19 +70,13 @@ const SlotCreate = ({ slots, doctorId }) => {
 				":" +
 				(getEndMinutes < 10 ? "0" + getEndMinutes.toString() : getEndMinutes),
 
-			date:
-				getDate.split("-")[0] +
-				"-" +
-				getDate.split("-")[1] +
-				"-" +
-				Number(getDate.split("-")[2]),
-			id: item._id,
-		};
-	});
-	console.log("GetSlot: ", getSlot);
-	useEffect(() => {
-		setAllSlots(getSlot);
-	}, []);
+                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
+                  id: item._id
+            }
+      });
+      useEffect(() => {
+            setAllSlots(getSlot);
+      }, []);
 
 	//Check slot isAppointment
 	const checkSlot = appointments?.data?.data.map((item) => item.slot);
