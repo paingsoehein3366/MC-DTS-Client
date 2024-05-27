@@ -12,16 +12,16 @@ const DoctorProfileRoute = () => {
 	const paramsId = useParams().doctorId;
 
 	const [toggle, setToggle] = useState("slot");
+
 	const button = "py-2 px-4 rounded-xl border";
 
 	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId)
 
-	console.log("Slot-with-Doctor ", data);
 	if (isError) {
 		return <h1>{error.message}</h1>;
 	}
 	const doctorValue = data?.data;
-	const slots = data?.data?.slots;
+
 	return (
 		<div>
 			{isLoading && <Loading />}
