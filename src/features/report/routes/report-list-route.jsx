@@ -148,24 +148,39 @@ const ReportListRoute = () => {
 		},
 	});
 
-
 	const selectedRows = table.getSelectedRowModel().rows;
-    const csvData = selectedRows.map((row) => {
-        const rowData = row.original;
-        const visibleData = {};
-        Object.keys(rowData).forEach((key) => {
-            if (table.getColumn(key)?.getIsVisible()) {
-                visibleData[key] = rowData[key];
-            }
-        });
-        return visibleData;
-    });
+	const csvData = selectedRows.map((row) => {
+		const rowData = row.original;
+		const visibleData = {};
+		Object.keys(rowData).forEach((key) => {
+			if (table.getColumn(key)?.getIsVisible()) {
+				visibleData[key] = rowData[key];
+			}
+		});
+		return visibleData;
+	});
+
+	// const selectedColumns = table.getSelectedColumnModel().columns;
+	// const headers = selectedColumns
+	// 	.filter(
+	// 		(column) =>
+	// 			column.accessorKey &&
+	// 			table.getColumn(column.accessorKey)?.getIsVisible(),
+	// 	)
+	// 	.map((column) => ({
+	// 		label: column.header ? column.header() : column.accessorKey, // Extracting the header text
+	// 		key: column.accessorKey,
+	// 	}));
 
 	return (
 		<>
 			<div className="flex justify-end">
-				<CSVLink data={csvData} className="border border-black px-8 py-1">
-					<img className="w-[30px]" src={CSV} alt="" />
+				<CSVLink
+					data={csvData}
+					// headers={headers}
+					className="bg-blue-500 hover:bg-blue-600 px-8 py-2 text-white"
+				>
+					Export to CSV
 				</CSVLink>
 			</div>
 			<div className="w-full">

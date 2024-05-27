@@ -13,7 +13,7 @@ const DoctorListRoute = () => {
 	const [openCreateDoctor, setOpenCreateDoctor] = useState(false);
 
 	return (
-		<div>
+		<div>	
 			<div className="flex justify-end mb-5">
 				<Button
 					onClick={() => setOpenCreateDoctor(true)}
@@ -24,7 +24,7 @@ const DoctorListRoute = () => {
 			</div>
 			{isLoading && <Loading />}
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-				{lists &&
+				{ lists &&
 					lists?.data.map((doctor) => (
 						<Card key={doctor._id}>
 							<div className=" flex justify-center items-center m-4">
