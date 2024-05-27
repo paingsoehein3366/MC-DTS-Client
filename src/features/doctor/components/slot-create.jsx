@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from 'react';
@@ -18,51 +19,64 @@ import { useGetAllAppointments } from '@/features/appointment/api/appointment-ge
 import SlotCheckIcon from './slot-check-icon';
 
 const SlotCreate = ({ slots, doctorId }) => {
-      const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
-      const [editSlot, setEditSlot] = useState({});
-      const [removeSlot, setRemoveSlot] = useState({});
-      const [allSlots, setAllSlots] = useState([]);
-      const [searchSlot, setSearchSlot] = useState('');
-      const [errorMessage, setErrorMessage] = useState({});
-      const [open, setOpen] = useState(false);
-      const [openRemove, setOpenRemove] = useState(false);
-      const [showDatePicker, setShowDatePicker] = useState('hidden');
-      const [addButtonStyle, setAddButtonStyle] = useState({ justify: 'end', marginLeft: 6 });
+	const [dateAndTimeData, setDateAndTimeData] = useState({
+		date: "",
+		startTime: "",
+		endTime: "",
+	});
+	const [editSlot, setEditSlot] = useState({});
+	const [removeSlot, setRemoveSlot] = useState({});
+	const [allSlots, setAllSlots] = useState([]);
+	const [searchSlot, setSearchSlot] = useState("");
+	const [errorMessage, setErrorMessage] = useState({});
+	const [open, setOpen] = useState(false);
+	const [openRemove, setOpenRemove] = useState(false);
+	const [showDatePicker, setShowDatePicker] = useState("hidden");
+	const [addButtonStyle, setAddButtonStyle] = useState({
+		justify: "end",
+		marginLeft: 6,
+	});
 
-      const useSlotCreateMutation = useSlotCreate();
-      const { data: appointments } = useGetAllAppointments();
-      console.log("appointment: ", appointments);
+	const useSlotCreateMutation = useSlotCreate();
+	const { data: appointments } = useGetAllAppointments();
+	console.log("appointment: ", appointments);
 
-      const startHour = parseInt(dateAndTimeData.startTime);
-      const startMinute = dateAndTimeData.startTime.split(':')[1];
-      const endHour = parseInt(dateAndTimeData.endTime);
-      const endMinute = dateAndTimeData.endTime.split(':')[1];
+	const startHour = parseInt(dateAndTimeData.startTime);
+	const startMinute = dateAndTimeData.startTime.split(":")[1];
+	const endHour = parseInt(dateAndTimeData.endTime);
+	const endMinute = dateAndTimeData.endTime.split(":")[1];
 
-      // choose day decide
-      const today = new Date().toISOString().split('T')[0];
-      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
+	// choose day decide
+	const today = new Date().toISOString().split("T")[0];
+	const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14))
+		.toISOString()
+		.split("T")[0];
 
-      // Get Slot
-      const getSlot = slots?.map(item => {
-            const getStartHours = new Date(item.start_date).getHours();
-            const getStartMinutes = new Date(item.start_date).getMinutes();
+	// Get Slot
+	const getSlot = slots?.map((item) => {
+		const getStartHours = new Date(item.start_date).getHours();
+		const getStartMinutes = new Date(item.start_date).getMinutes();
 
-            const getEndHours = new Date(item.end_date).getHours();
-            const getEndMinutes = new Date(item.end_date).getMinutes();
+		const getEndHours = new Date(item.end_date).getHours();
+		const getEndMinutes = new Date(item.end_date).getMinutes();
 
-            const getDate = new Date(item.end_date).toISOString().substring(0, 10);
+		const getDate = new Date(item.end_date).toISOString().substring(0, 10);
 
-            return {
-                  startDate: (getStartHours < 10 ? '0' + getStartHours.toString() : getStartHours)
-                        + ':' +
-                        (getStartMinutes < 10 ? '0' + getStartMinutes.toString() : getStartMinutes),
+		return {
+			startDate:
+				(getStartHours < 10 ? "0" + getStartHours.toString() : getStartHours) +
+				":" +
+				(getStartMinutes < 10 ?
+					"0" + getStartMinutes.toString()
+				:	getStartMinutes),
 
-                  endDate: (getEndHours < 10 ? '0' + getEndHours.toString() : getEndHours)
-                        + ':' +
-                        (getEndMinutes < 10 ? '0' + getEndMinutes.toString() : getEndMinutes),
+			endDate:
+				(getEndHours < 10 ? "0" + getEndHours.toString() : getEndHours) +
+				":" +
+				(getEndMinutes < 10 ? "0" + getEndMinutes.toString() : getEndMinutes),
 
-                  date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
-                  id: item._id
+         date: getDate.split('-')[0] + '-' + getDate.split('-')[1] + '-' + (Number(getDate.split('-')[2])),
+         id: item._id
             }
       });
       useEffect(() => {
@@ -249,4 +263,4 @@ const SlotCreate = ({ slots, doctorId }) => {
       )
 }
 
-export default SlotCreate
+export default SlotCreate;

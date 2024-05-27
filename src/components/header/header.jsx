@@ -3,9 +3,6 @@ import Logo from "../../assets/logo.png";
 import {
 	Sheet,
 	SheetContent,
-	SheetDescription,
-	SheetHeader,
-	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import MenuIcon from "../menu-icon/menu-icon";
