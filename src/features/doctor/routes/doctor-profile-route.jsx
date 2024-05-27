@@ -12,11 +12,11 @@ const DoctorProfileRoute = () => {
 	const paramsId = useParams().doctorId;
 
 	const [toggle, setToggle] = useState("slot");
+
 	const button = "py-2 px-4 rounded-xl border";
 
 	const { data, isError, error, isLoading } = useGetDoctorSlot(paramsId);
 
-	console.log("Slot with Doctor ", data);
 	if (isError) {
 		return <h1>{error.message}</h1>;
 	}

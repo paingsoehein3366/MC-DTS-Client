@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* body {
+    background: #000612;
+} */
+
 a.active {
     color: blue;
     font-weight: bold;

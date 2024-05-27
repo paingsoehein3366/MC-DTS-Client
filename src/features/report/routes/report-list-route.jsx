@@ -25,10 +25,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import CSV from "../../../assets/csv.jpg";
 import { useGetAllReports } from "../api";
 import { useState, useMemo } from "react";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 const columns = [
 	{
@@ -160,25 +159,17 @@ const ReportListRoute = () => {
 		return visibleData;
 	});
 
-	// const selectedColumns = table.getSelectedColumnModel().columns;
-	// const headers = selectedColumns
-	// 	.filter(
-	// 		(column) =>
-	// 			column.accessorKey &&
-	// 			table.getColumn(column.accessorKey)?.getIsVisible(),
-	// 	)
-	// 	.map((column) => ({
-	// 		label: column.header ? column.header() : column.accessorKey, // Extracting the header text
-	// 		key: column.accessorKey,
-	// 	}));
-
 	return (
 		<>
 			<div className="flex justify-end">
 				<CSVLink
 					data={csvData}
-					// headers={headers}
-					className="bg-blue-500 hover:bg-blue-600 px-8 py-2 text-white"
+					className={`px-8 py-2 text-white rounded-[6px] ${csvData.length > 0 ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 cursor-not-allowed"}`}
+					onClick={(e) => {
+						if (csvData.length === 0) {
+							e.preventDefault();
+						}
+					}}
 				>
 					Export to CSV
 				</CSVLink>
