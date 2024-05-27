@@ -15,6 +15,7 @@ import SlotRemove from './slot-remove';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useGetAllAppointments } from '@/features/appointment/api/appointment-get-api';
+import SlotCheckIcon from './slot-check-icon';
 
 const SlotCreate = ({ slots, doctorId }) => {
       const [dateAndTimeData, setDateAndTimeData] = useState({ date: "", startTime: "", endTime: "" });
@@ -69,8 +70,10 @@ const SlotCreate = ({ slots, doctorId }) => {
       }, []);
 
       //Check slot isAppointment
-      const checkSlot = appointments?.data?.data.map(item => item.slot)
-      console.log("checkSlot: ", checkSlot);
+      const getSlotId = getSlot?.map(item => item.id);
+      const checkSlotIsAppointment = appointments?.data?.data.filter(item => getSlotId.includes(item.slot._id));
+      const checkSlotIsAppointmentId = checkSlotIsAppointment?.map(item => item.slot._id);
+      console.log("checkSlotIsAppointmentId: ", (checkSlotIsAppointmentId))
       // Check Date
       const checkDate = getSlot?.filter(item => searchSlot.includes(item.date));
 
@@ -107,6 +110,7 @@ const SlotCreate = ({ slots, doctorId }) => {
                   }
             });
       };
+
       // All Slots 
       const AllSlots = () => {
             setSearchSlot('');
@@ -182,20 +186,27 @@ const SlotCreate = ({ slots, doctorId }) => {
                                                       <TableCell>-</TableCell>
                                                       <TableCell>{tag.endDate}</TableCell>
                                                 </TableBody>
-                                                {checkDate}
                                                 <button
                                                       onClick={() => {
                                                             setEditSlot({ startDate: tag.startDate, endDate: tag.endDate, date: tag.date, id: tag.id, doctorId })
                                                             setOpen(true);
                                                       }}
                                                       className='rounded-[7px]  text-blue-400 ml-6'
-                                                ><EditIcon /></button>
+                                                >
+                                                      <EditIcon />
+                                                </button>
+
                                                 <button onClick={() => {
                                                       setRemoveSlot({ id: tag.id })
                                                       setOpenRemove(true);
                                                 }}
                                                       className='w-6 h-6 ml-4'>
-                                                      <DeleteIcon />
+                                                      {!checkSlotIsAppointmentId?.map(item => item === tag.id) ?
+                                                            <SlotCheckIcon />
+                                                            :
+                                                            <DeleteIcon />
+                                                      }
+
                                                 </button>
                                           </div>
                                     ))) :
@@ -230,6 +241,8 @@ const SlotCreate = ({ slots, doctorId }) => {
                                           )))}
                         </ScrollArea>
                   </div>
+                  {/* checkIsAppointmentThisSlot */}
+
                   <SlotEdit slotEditDialogBoxOpen={open} setSlotEditDialogBoxOpen={() => setOpen(false)} data={editSlot} />
                   <SlotRemove open={openRemove} setOpen={() => setOpenRemove(false)} slotId={removeSlot?.id} />
             </div>
