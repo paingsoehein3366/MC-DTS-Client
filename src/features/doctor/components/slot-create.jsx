@@ -64,7 +64,6 @@ const SlotCreate = ({ slots, doctorId }) => {
                   id: item._id
             }
       });
-      console.log("GetSlot: ", getSlot);
       useEffect(() => {
             setAllSlots(getSlot);
       }, []);
