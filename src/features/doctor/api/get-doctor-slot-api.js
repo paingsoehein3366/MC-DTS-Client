@@ -2,7 +2,7 @@ import { fetcher } from "@/lib/axios"
 import { useQuery } from "@tanstack/react-query";
 
 export const getDoctorSlot = async (doctorId) => {
-      const { data } = await fetcher.get(`/doctors/${doctorId}/slots`)
+      const { data } = await fetcher.get(`/slots?doctor=${doctorId}`)
       return data;
 };
 

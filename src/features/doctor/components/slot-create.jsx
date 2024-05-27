@@ -87,14 +87,14 @@ const SlotCreate = ({ slots, doctorId }) => {
 	//Check slot isAppointment
 	const getSlotId = getSlot?.map((item) => item.id);
 	const checkSlotIsAppointment = appointments?.data?.data.filter((item) =>
-		getSlotId.includes(item.slot._id),
+		getSlotId?.includes(item.slot._id),
 	);
 	const checkSlotIsAppointmentId = checkSlotIsAppointment?.map(
 		(item) => item.slot._id,
 	);
 	console.log("checkSlotIsAppointmentId: ", checkSlotIsAppointmentId);
 	// Check Date
-	const checkDate = getSlot?.filter((item) => searchSlot.includes(item.date));
+	const checkDate = getSlot?.filter((item) => searchSlot?.includes(item.date));
 
 	// Add Slot
 	const AddSlot = async () => {
@@ -244,7 +244,7 @@ const SlotCreate = ({ slots, doctorId }) => {
 						!allSlots?.length ?
 							<h1>not slot</h1>
 						:	getSlot?.map((tag) => {
-								const isAppointment = checkSlotIsAppointmentId.includes(tag.id);
+								const isAppointment = checkSlotIsAppointmentId?.includes(tag.id);
 								return (
 									<div
 										key={tag.id}
@@ -294,7 +294,7 @@ const SlotCreate = ({ slots, doctorId }) => {
 							Not Slot
 						</h1>
 					:	checkDate?.map((tag) => {
-							const isAppointment = checkSlotIsAppointmentId.includes(tag.id);
+							const isAppointment = checkSlotIsAppointmentId?.includes(tag.id);
 							return (
 								<div
 									key={tag.id}
