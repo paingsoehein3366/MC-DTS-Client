@@ -37,6 +37,13 @@ const AppointmentListRoute = () => {
       const { data } = useGetAllAppointments();
       const { data: DoctorData } = useGetAllDoctors();
 
+      // Filter
+      const filterAppointments = data?.data?.data?.filter((appointment) => {
+            const currentDate = new Date();
+            const endDate = new Date(appointment.slot.start_date);
+            return endDate >= currentDate;
+          });
+
       return (
             <div>
                   <div className="flex justify-end gap-3 mb-3">
@@ -68,7 +75,7 @@ const AppointmentListRoute = () => {
                               </TableRow>
                         </TableHeader>
                         <TableBody>
-                              {data?.data?.data?.map(item => {
+                              {filterAppointments?.map(item => {
                                     const startHour = new Date(item?.slot?.start_date).getHours();
                                     const startMinute = new Date(item?.slot?.start_date).getMinutes();
                                     const endHour = new Date(item?.slot?.end_date).getHours();
