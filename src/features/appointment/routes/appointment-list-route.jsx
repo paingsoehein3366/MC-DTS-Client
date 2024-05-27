@@ -36,7 +36,7 @@ const AppointmentListRoute = () => {
       const [appointmentId, setAppointmentId] = useState();
       const { data } = useGetAllAppointments();
       const { data: DoctorData } = useGetAllDoctors();
-      
+
       return (
             <div>
                   <div className="flex justify-end gap-3 mb-3">
@@ -85,34 +85,36 @@ const AppointmentListRoute = () => {
                                                 <TableCell className="">{startDate} : {endDate}</TableCell>
                                                 <TableCell className="">Dr.{item?.doctor?.name}</TableCell>
                                                 <TableCell className="">$250.00</TableCell>
-                                                <Button
-                                                      className="w-8 h-8 text-green-500 hover:bg-green-400 rounded-[20px] hover:text-white p-1"
-                                                      onClick={() => {
-                                                            setPatientProfileOpen(true);
-                                                            setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate, gender: item.gender })
-                                                      }}
-                                                >
-                                                      <EyeIcon />
-                                                </Button>
-                                                <Button
-                                                      className="text-blue-400 hover:bg-blue-400 rounded-[20px] hover:text-white p-1 w-8 h-8"
-                                                      onClick={() => {
-                                                            setPatientUpdateOpen(true);
-                                                            setPatientDate({ date, time: `${startDate}:${endDate}` });
-                                                            setPatientData(item);
-                                                      }}
-                                                >
-                                                      <UpdateIcon />
-                                                </Button>
-                                                <Button
-                                                      className="p-2"
-                                                      onClick={() => {
-                                                            setPatientDeleteOpen(true);
-                                                            setAppointmentId(item.id)
-                                                      }}
-                                                >
-                                                      <DeleteIcon />
-                                                </Button>
+                                                <TableCell>
+                                                      <Button
+                                                            className="w-8 h-8 text-green-500 hover:bg-green-400 rounded-[20px] hover:text-white p-1"
+                                                            onClick={() => {
+                                                                  setPatientProfileOpen(true);
+                                                                  setPatientData({ name: item.username, email: item.email, age: item.age, date: date, startDate, endDate, gender: item.gender })
+                                                            }}
+                                                      >
+                                                            <EyeIcon />
+                                                      </Button>
+                                                      <Button
+                                                            className="text-blue-400 hover:bg-blue-400 rounded-[20px] hover:text-white p-1 w-8 h-8"
+                                                            onClick={() => {
+                                                                  setPatientUpdateOpen(true);
+                                                                  setPatientDate({ date, time: `${startDate}:${endDate}` });
+                                                                  setPatientData(item);
+                                                            }}
+                                                      >
+                                                            <UpdateIcon />
+                                                      </Button>
+                                                      <Button
+                                                            className="p-2"
+                                                            onClick={() => {
+                                                                  setPatientDeleteOpen(true);
+                                                                  setAppointmentId(item.id)
+                                                            }}
+                                                      >
+                                                            <DeleteIcon />
+                                                      </Button>
+                                                </TableCell>
                                           </TableRow>
                                     )
                               })}

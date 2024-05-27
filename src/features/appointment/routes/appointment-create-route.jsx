@@ -121,7 +121,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
 
                                                 <SelectContent className="bg-[#fff]">
                                                       {doctorData?.data?.map(item => (
-                                                            <SelectItem value={item._id}>Dr.{item.name}</SelectItem>
+                                                            <SelectItem key={item._id} value={item._id}>Dr.{item.name}</SelectItem>
                                                       ))}
                                                 </SelectContent>
                                           </Select>
@@ -164,7 +164,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
 
                                                             <SelectContent className="bg-[#fff]">
                                                                   {hasDuplicates?.map(item => (
-                                                                        <SelectItem value={item}>{item}</SelectItem>
+                                                                        <SelectItem key={item} value={item}>{item}</SelectItem>
                                                                   ))}
                                                             </SelectContent>
                                                       </Select>
@@ -179,7 +179,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
 
                                                                   <SelectContent className="bg-[#fff]">
                                                                         {hasDuplicates?.map(item => (
-                                                                              <SelectItem value={item}>{item}</SelectItem>
+                                                                              <SelectItem key={item} value={item}>{item}</SelectItem>
                                                                         ))}
                                                                   </SelectContent>
                                                             </Select>

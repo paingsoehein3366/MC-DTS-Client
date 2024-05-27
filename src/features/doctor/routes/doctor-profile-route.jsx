@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import SlotCreate from "../components/slot-create";
-import { useGetDoctorSlot } from "../api/get-doctor-slot-api";
 import Male from "../../../assets/male.jpeg";
 import Female from "../../../assets/female.jpeg";
 import { Loading } from "@/components";
 import DoctorSetting from "../components/doctor-setting";
+import SlotCreateRoute from "@/features/slot/routes/create-slot-route";
+import { useGetOneDoctor } from "../api/get-doctor-api";
 
 const DoctorProfileRoute = () => {
 	const paramsId = useParams().doctorId;
@@ -14,7 +14,9 @@ const DoctorProfileRoute = () => {
 	const [toggle, setToggle] = useState("slot");
 	const button = "py-2 px-4 rounded-xl border";
 
-	const { data, isError, error, isLoading } = useGetDoctorSlot(paramsId);
+	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId)
+
+	console.log("Slot-with-Doctor ", data);
 	if (isError) {
 		return <h1>{error.message}</h1>;
 	}
@@ -58,7 +60,7 @@ const DoctorProfileRoute = () => {
 								</button>
 							</div>
 							{toggle === 'slot' ?
-								<SlotCreate slots={slots} doctorId={paramsId} />
+								<SlotCreateRoute doctorId={paramsId} />
 								:
 								<DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />
 							}

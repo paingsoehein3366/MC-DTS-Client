@@ -5,7 +5,7 @@ import { queryClient } from "@/lib/react-query";
 import { toast } from "react-toastify";
 import { useDeleteSlot } from "../api/delete-slot-api";
 
-export default function SlotRemove({ open, setOpen, slotId }) {
+export default function SlotDelete({ open, setOpen, slotId }) {
       const useDeleteSlotMutation = useDeleteSlot();
       console.log("slotId: ", slotId);
       const slotDelete = () => {
