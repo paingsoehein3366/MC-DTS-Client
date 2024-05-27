@@ -36,8 +36,7 @@ const AppointmentListRoute = () => {
       const [appointmentId, setAppointmentId] = useState();
       const { data } = useGetAllAppointments();
       const { data: DoctorData } = useGetAllDoctors();
-      console.log("Data: ", data?.data);
-      // appointments/doctorId/
+      
       return (
             <div>
                   <div className="flex justify-end gap-3 mb-3">
@@ -78,7 +77,7 @@ const AppointmentListRoute = () => {
                                     const endDate = (endHour < 10 ? '0' + endHour : endHour) + ':' + (endMinute < 10 ? '0' + endMinute : endMinute);
                                     const date = new Date(item?.slot?.end_date).toISOString().substring(0, 10)
                                     return (
-                                          <TableRow>
+                                          <TableRow key={item?._id}>
                                                 <TableCell className="">{item?.username}</TableCell>
                                                 <TableCell className="">{item.email}</TableCell>
                                                 <TableCell className="">{item.age}</TableCell>
