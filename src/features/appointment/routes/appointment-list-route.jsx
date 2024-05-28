@@ -42,12 +42,12 @@ const AppointmentListRoute = () => {
             const currentDate = new Date();
             const endDate = new Date(appointment.slot.start_date);
             return endDate >= currentDate;
-          });
+      });
 
       return (
             <div>
                   <div className="flex justify-end gap-3 mb-3">
-                        <Select>
+                        {/* <Select>
                               <SelectTrigger className="w-[180px] rounded-[7px] focus:outline-none focus:border-blue-400 border-gray-300">
                                     <SelectValue placeholder="Today" />
                               </SelectTrigger>
@@ -56,7 +56,7 @@ const AppointmentListRoute = () => {
                                     <SelectItem value="dark">Tomorrow</SelectItem>
                                     <SelectItem value="system">Yesterday</SelectItem>
                               </SelectContent>
-                        </Select>
+                        </Select> */}
                         <Button
                               className="rounded bg-[#386cf0] text-[#fff] hover:bg-[#668ae3] active:bg-[#386cf0] px-14"
                               onClick={() => setOpenAppointment(true)}

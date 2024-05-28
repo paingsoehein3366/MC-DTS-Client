@@ -236,6 +236,8 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
                               <div className={inputContainer}>
                                     <Label>Your Age <span className='text-red-500'>*</span><span className='text-red-500'></span></Label>
                                     <input
+                                          min={0}
+                                          max={100}
                                           type="number"
                                           className={inputStyle}
                                           placeholder='Your Age'
