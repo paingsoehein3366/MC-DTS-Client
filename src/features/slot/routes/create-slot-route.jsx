@@ -35,7 +35,6 @@ const SlotCreateRoute = ({ doctorId }) => {
 	});
 
 	const { data: slots } = useGetSlotDoctor(doctorId);
-	console.log("Slots: ", slots?.data);
 
 	const useSlotCreateMutation = useSlotCreate();
 	const { data: appointments } = useGetAllAppointments();
@@ -58,6 +57,7 @@ const SlotCreateRoute = ({ doctorId }) => {
 		const endDate = new Date(slot.end_date);
 		return startDate >= currentDate && endDate >= currentDate;
 	});
+	
 	// Get Slot
 	const getSlot = filterSlots?.map((item) => {
 		const getStartHours = new Date(item.start_date).getHours();
