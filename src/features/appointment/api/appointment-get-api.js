@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/axios"
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const getAllAppointments = async () => {
       const { data } = await fetcher.get(`/appointments`);

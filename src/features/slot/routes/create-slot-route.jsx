@@ -5,6 +5,7 @@ import { queryClient } from "@/lib/react-query";
 import { toast } from "react-toastify";
 import SlotListRoute from "./slot-list-route";
 import { useSlotCreate } from "../api/create-slot-api";
+import { useGetSlotDoctor } from "../api/get-slot-doctor-api";
 
 const SlotCreateRoute = ({ doctorId }) => {
 	const [dateAndTimeData, setDateAndTimeData] = useState({
@@ -19,6 +20,8 @@ const SlotCreateRoute = ({ doctorId }) => {
 		marginLeft: 6,
 	});
 
+	const { data: slots } = useGetSlotDoctor(doctorId);
+
 	const useSlotCreateMutation = useSlotCreate();
 
 	// choose day decide
@@ -31,7 +34,20 @@ const SlotCreateRoute = ({ doctorId }) => {
 	const startMinute = dateAndTimeData.startTime.split(":")[1];
 	const endHour = parseInt(dateAndTimeData.endTime);
 	const endMinute = dateAndTimeData.endTime.split(":")[1];
+	// Filter Slots
+	const filterSlots = slots?.data?.filter((slot) => {
+		const currentDate = new Date();
+		const startDate = new Date(slot.start_date);
+		const endDate = new Date(slot.end_date);
+		return startDate >= currentDate && endDate >= currentDate;
+	});
 
+	// Get Slot
+	const getSlot = filterSlots?.map((item) => {
+		const getStartHours = new Date(item.start_date).getHours();
+		const getStartMinutes = new Date(item.start_date).getMinutes();
+
+	})
 
 	// Add Slot
 	const AddSlot = async () => {
