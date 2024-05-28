@@ -6,14 +6,12 @@ import { toast } from 'react-toastify';
 import { useUpdateSlot } from '../api/update-slot-api';
 
 const SlotUpdate = ({ slotEditDialogBoxOpen, setSlotEditDialogBoxOpen, data }) => {
-      console.log("data: ", data);
       const [updateSlotData, setUpdateSlotData] = useState({});
       const useUpdateMutation = useUpdateSlot();
       const inputStyle = 'border p-2   rounded-[7px] mx-2 focus:outline-none focus:border-blue-500';
       const today = new Date().toISOString().split('T')[0];
       const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0];
       const updateSlot = async () => {
-            console.log("id: ", data.id, ", data: ", updateSlotData);
             if (!updateSlotData.date) {
                   updateSlotData.date = data.date;
             } if (!updateSlotData.startDate) {
