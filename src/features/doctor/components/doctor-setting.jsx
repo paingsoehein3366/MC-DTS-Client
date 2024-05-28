@@ -32,7 +32,6 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
       };
 
       const doctorUpdate = async () => {
-            console.log("doctorInputValue: ", doctorInputValue);
             const { message, key } = await updateDoctorSchema.validate(doctorInputValue).catch(err => {
                   return { message: err.errors, key: err.path }
             });
@@ -44,7 +43,6 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
                               queryKey: ['slots']
                         }),
                               toast('Doctor update success')
-                        console.log("success");
                   },
                   onError: (err) => {
                         console.log("Error: ", err);
@@ -155,7 +153,7 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
                                                       })
                                                 }
                                           >
-                                                <SelectTrigger className={inputStyle}>
+                                                <SelectTrigger className='border-gray-300 rounded mt-2'>
                                                       <SelectValue placeholder="Specialist" />
                                                 </SelectTrigger>
                                                 <SelectContent className="bg-[#fff]">
@@ -178,7 +176,7 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
                               <div className={inputContainer}>
                                     <Label>Your Bio Here</Label>
                                     <textarea
-                                          className="mt-2 border w-[470px] h-24 px-4 py-2 rounded-[7px] border-gray-300 text-sm focus:outline-none focus:border-blue-500"
+                                          className="mt-2 border w-[460px] h-24 px-4 py-2 rounded-[7px] border-gray-300 text-sm focus:outline-none focus:border-blue-500"
                                           placeholder="Bio:"
                                           name="bio"
                                           defaultValue={doctorValue.bio}
