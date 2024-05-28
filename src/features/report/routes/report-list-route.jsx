@@ -65,7 +65,7 @@ const columns = [
 			return (
 				<Button
 					variant="ghost"
-					// onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				// onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					Email
 					<ArrowUpDown className="ml-2 h-4 w-4" />
@@ -109,9 +109,15 @@ const columns = [
 const ReportListRoute = () => {
 	const { data: reports } = useGetAllReports();
 
+	const filterAppointments = reports?.data?.filter((appointment) => {
+		const currentDate = new Date();
+		const endDate = new Date(appointment.slot.start_date);
+		return endDate >= currentDate;
+	});
+
 	const reportData = useMemo(
 		() =>
-			reports?.data?.map((report) => ({
+			filterAppointments?.map((report) => ({
 				name: report.username,
 				email: report.email,
 				age: report.age,
@@ -120,7 +126,7 @@ const ReportListRoute = () => {
 				doctor: report.doctor.name,
 				fees: "200",
 			})) || [],
-		[reports?.data],
+		[filterAppointments?.length],
 	);
 
 	const [sorting, setSorting] = useState([]);
@@ -249,7 +255,7 @@ const ReportListRoute = () => {
 										))}
 									</TableRow>
 								))
-							:	<TableRow>
+								: <TableRow>
 									<TableCell
 										colSpan={columns.length}
 										className="h-24 text-center"
