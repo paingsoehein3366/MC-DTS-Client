@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Male from "../../../assets/male.jpeg";
@@ -15,7 +15,7 @@ const DoctorProfileRoute = () => {
 
 	const button = "py-2 px-4 rounded-xl border";
 
-	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId)
+	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId);
 
 	if (isError) {
 		return <h1>{error.message}</h1>;

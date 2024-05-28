@@ -2,6 +2,7 @@ import React from 'react';
 import {
       Dialog,
       DialogContent,
+      DialogFooter,
       DialogHeader,
       DialogTitle,
 } from "@/components/ui/dialog";
@@ -22,7 +23,6 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 
 const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patientDate }) => {
-      console.log("doctorData:", doctorData);
       const [appointmentData, setAppointmentData] = useState(patientData);
       const [date, setDate] = useState();
       const [errorMessage, setErrorMessage] = useState(patientData);
@@ -48,22 +48,18 @@ const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patien
                   id: item._id
             }
       });
-      console.log("currentDate: ", changeIOSstring);
       const getDate = changeIOSstring?.map(item => (item.date));
       const checkDate = changeIOSstring?.filter(item => date?.includes(item.date));
       // Output: array of hasDuplicate dates
       const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
-      console.log("hasDuplicates: ", hasDuplicates, date);
       const handleOnchange = (e) => {
             const { name, value } = e.target;
             setAppointmentData({ ...appointmentData, [name]: value })
       };
       const appointmentUpdate = async () => {
-            console.log(appointmentData);
             if (appointmentData.doctor) {
                   if (!appointmentData.slot) {
-                        console.log("date");
-                        return;
+                        return toast("Enter Date and Time");
                   }
             };
             useAppointmentUpdateMutation.mutate({ id: patientData?._id, data: appointmentData }, {
@@ -263,10 +259,12 @@ const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patien
                                     </div>
                               </div>
                         </DialogHeader>
-                        <div className="flex justify-around my-5">
-                              <Button className="border rounded border-gray-400" onClick={setOpen}>Cancel</Button>
-                              <Button className="rounded bg-blue-500 text-[#fff] hover:bg-blue-400 active:bg-red-500" onClick={appointmentUpdate}>Update</Button>
-                        </div>
+                        <DialogFooter>
+                              <div className="flex justify-around my-5 w-full">
+                                    <Button className="border rounded border-gray-400" onClick={setOpen}>Cancel</Button>
+                                    <Button className="rounded bg-blue-500 text-[#fff] hover:bg-blue-400" onClick={appointmentUpdate}>Update</Button>
+                              </div>
+                        </DialogFooter>
                   </DialogContent>
             </Dialog>
       )

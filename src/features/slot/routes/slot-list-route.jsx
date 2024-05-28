@@ -21,7 +21,6 @@ const SlotListRoute = ({ doctorId }) => {
       const [showDatePicker, setShowDatePicker] = useState("hidden");
 
       const { data: slots } = useGetSlotDoctor(doctorId);
-
       const { data: appointments } = useGetAllAppointments();
 
       // choose day decide
@@ -35,7 +34,7 @@ const SlotListRoute = ({ doctorId }) => {
             const currentDate = new Date();
             const startDate = new Date(slot.start_date);
             const endDate = new Date(slot.end_date);
-            return startDate >= currentDate && endDate >= currentDate;
+            return startDate >= currentDate;
       });
       // Get Slot
       const getSlot = filterSlots?.map((item) => {
@@ -63,13 +62,21 @@ const SlotListRoute = ({ doctorId }) => {
                         "-" +
                         getDate.split("-")[1] +
                         "-" +
-                        Number(getDate.split("-")[2]),
+                        getDate.split("-")[2],
                   id: item._id,
             };
       });
       useEffect(() => {
-            setAllSlots(getSlot);
-      }, []);
+            if (getSlot?.length) {
+                  setAllSlots(getSlot);
+                  setSearchSlot("");
+            } else {
+                  setAllSlots();
+                  setSearchSlot("");
+                  return;
+            }
+
+      }, [getSlot?.length]);
 
       //Check slot isAppointment
       const getSlotId = getSlot?.map((item) => item.id);
@@ -87,7 +94,6 @@ const SlotListRoute = ({ doctorId }) => {
             setSearchSlot("");
             setAllSlots(getSlot);
       };
-
       return (
             <div>
                   <div className="  mt-5 ">
@@ -132,7 +138,7 @@ const SlotListRoute = ({ doctorId }) => {
                         {allSlots?.length ?
                               !allSlots?.length ?
                                     <h1>not slot</h1>
-                                    : getSlot?.map((tag) => {
+                                    : allSlots?.map((tag) => {
                                           const isAppointment = checkSlotIsAppointmentId?.includes(
                                                 tag.id,
                                           );
@@ -158,7 +164,7 @@ const SlotListRoute = ({ doctorId }) => {
                                                                   });
                                                                   setOpen(true);
                                                             }}
-                                                            className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400"}`}
+                                                            className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400 rounded-xl hover:bg-blue-400 hover:text-white transition-all"}`}
                                                             disabled={isAppointment}
                                                       >
                                                             <EditIcon />
@@ -208,7 +214,7 @@ const SlotListRoute = ({ doctorId }) => {
                                                                   });
                                                                   setOpen(true);
                                                             }}
-                                                            className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400"}`}
+                                                            className={`rounded-[7px] ml-6 ${isAppointment ? "text-gray-300" : "text-blue-400 rounded-xl hover:bg-blue-400 hover:text-white transition-all"}`}
                                                             disabled={isAppointment}
                                                       >
                                                             <EditIcon />
