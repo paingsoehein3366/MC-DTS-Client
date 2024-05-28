@@ -7,7 +7,6 @@ import { useDeleteSlot } from "../api/delete-slot-api";
 
 export default function SlotDelete({ open, setOpen, slotId }) {
       const useDeleteSlotMutation = useDeleteSlot();
-      console.log("slotId: ", slotId);
       const slotDelete = () => {
             useDeleteSlotMutation.mutate(slotId, {
                   onSuccess: () => {

@@ -19,13 +19,13 @@ import { useGetDoctorSlots } from '../api/doctor-slot-get-api';
 import { useAppointmentUpdate } from '../api';
 import { queryClient } from '@/lib/react-query';
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patientDate }) => {
-      console.log("patientData: ", patientData);
+      console.log("doctorData:", doctorData);
       const [appointmentData, setAppointmentData] = useState(patientData);
       const [date, setDate] = useState();
       const [errorMessage, setErrorMessage] = useState(patientData);
-      console.log("errormessage: ", errorMessage);
 
       const inputStyle = "border border-gray-300 w-48 h-10 px-3 rounded-[7px] mt-2 text-sm focus:outline-none focus:border-blue-500";
       const inputContainer = "flex flex-col";
@@ -34,7 +34,9 @@ const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patien
       const { data } = useGetDoctorSlots(appointmentData?.doctor);
       const useAppointmentUpdateMutation = useAppointmentUpdate();
 
-      const changeIOSstring = data?.data?.slots?.map(item => {
+      const checkCurrentDate = data?.data?.slots?.filter(item => item.start_date > new Date().toISOString());
+
+      const changeIOSstring = checkCurrentDate?.map(item => {
             const startHour = new Date(item.start_date).getHours();
             const startMinute = new Date(item.start_date).getMinutes();
             const endHour = new Date(item.end_date).getHours();
@@ -46,27 +48,32 @@ const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patien
                   id: item._id
             }
       });
-
+      console.log("currentDate: ", changeIOSstring);
       const getDate = changeIOSstring?.map(item => (item.date));
       const checkDate = changeIOSstring?.filter(item => date?.includes(item.date));
       // Output: array of hasDuplicate dates
       const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
-
-
+      console.log("hasDuplicates: ", hasDuplicates, date);
       const handleOnchange = (e) => {
             const { name, value } = e.target;
             setAppointmentData({ ...appointmentData, [name]: value })
       };
       const appointmentUpdate = async () => {
-            console.log("updateData: ", { id: patientData?._id, appointmentData });
+            console.log(appointmentData);
+            if (appointmentData.doctor) {
+                  if (!appointmentData.slot) {
+                        console.log("date");
+                        return;
+                  }
+            };
             useAppointmentUpdateMutation.mutate({ id: patientData?._id, data: appointmentData }, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
                               queryKey: ['appointments']
                         })
-                        setAppointmentData({})
                         toast('Appointment update success!')
                         setOpen();
+                        setAppointmentData()
                   },
                   onError: (err) => {
                         console.log("Error: ", err);
@@ -138,38 +145,83 @@ const AppointmentUpdateRoute = ({ open, setOpen, patientData, doctorData, patien
                                     <div className='flex mt-5 justify-between mb-1'>
                                           <div className="flex flex-col">
                                                 <Label>Date <span className='text-red-500'>*</span></Label>
-                                                <Select onValueChange={(value) => setDate(value)} >
-                                                      <SelectTrigger className={selectStyle} >
-                                                            <SelectValue
-                                                                  placeholder={patientDate?.date}
-                                                            />
-                                                      </SelectTrigger>
+                                                {appointmentData?.doctor ?
+                                                      <Select onValueChange={(value) => setDate(value)} >
+                                                            <SelectTrigger className={selectStyle} >
+                                                                  <SelectValue
+                                                                        placeholder="Date"
+                                                                  />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-[#fff]">
+                                                                  {
+                                                                        hasDuplicates?.map(item => (
+                                                                              <SelectItem key={item} value={item}>{item}</SelectItem>
+                                                                        ))
+                                                                  }                                                            </SelectContent>
+                                                      </Select>
+                                                      :
+                                                      <>
+                                                            <Select onValueChange={(value) => setDate(value)} >
+                                                                  <SelectTrigger className={selectStyle} >
+                                                                        <SelectValue
+                                                                              placeholder={patientDate?.date}
+                                                                        />
+                                                                  </SelectTrigger>
 
-                                                      <SelectContent className="bg-[#fff]">
-                                                            {hasDuplicates?.map(item => (
-                                                                  <SelectItem key={item} value={item}>{item}</SelectItem>
-                                                            ))}
-                                                      </SelectContent>
-                                                </Select>
-                                                <span className="text-red-500 text-sm ml-4">{errorMessage?.date}</span>
+                                                                  <SelectContent className="bg-[#fff]">
+                                                                        {
+                                                                              hasDuplicates?.map(item => (
+                                                                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                                                              ))
+                                                                        }
+                                                                  </SelectContent>
+                                                            </Select>
+                                                            <span className="text-red-500 text-sm ml-4">{errorMessage?.date}</span>
+                                                      </>
+                                                }
+
                                           </div>
                                           <div className={inputContainer}>
                                                 <Label>Time <span className='text-red-500'>*</span></Label>
-                                                <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
-                                                      <SelectTrigger className={selectStyle}>
-                                                            <SelectValue
-                                                                  placeholder={patientDate?.time}
-                                                                  name='slot'
-                                                                  onChange={handleOnchange}
-                                                            />
-                                                      </SelectTrigger>
-                                                      <SelectContent className="bg-[#fff]">
-                                                            {checkDate?.map(item => (
-                                                                  <SelectItem key={item} value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
-                                                            ))}
-                                                      </SelectContent>
-                                                </Select>
-                                                <span className="text-red-500 text-sm ml-4">{errorMessage?.slot}</span>
+                                                {appointmentData?.doctor ?
+                                                      <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
+                                                            <SelectTrigger className={selectStyle}>
+                                                                  <SelectValue
+                                                                        placeholder="Time"
+                                                                        name='slot'
+                                                                        onChange={handleOnchange}
+                                                                  />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-[#fff]">
+                                                                  {
+                                                                        checkDate?.map(item => (
+                                                                              <SelectItem key={item} value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
+                                                                        ))
+                                                                  }
+                                                            </SelectContent>
+                                                      </Select>
+                                                      :
+                                                      <>
+                                                            <Select onValueChange={(value) => setAppointmentData({ ...appointmentData, slot: value })} name="time">
+                                                                  <SelectTrigger className={selectStyle}>
+                                                                        <SelectValue
+                                                                              placeholder={patientDate?.time}
+                                                                              name='slot'
+                                                                              onChange={handleOnchange}
+                                                                        />
+                                                                  </SelectTrigger>
+                                                                  <SelectContent className="bg-[#fff]">
+                                                                        {
+                                                                              checkDate?.map(item => (
+                                                                                    <SelectItem key={item} value={item.id}>{item.startDate} - {item.endDate}</SelectItem>
+                                                                              ))
+                                                                        }
+                                                                  </SelectContent>
+                                                            </Select>
+                                                            <span className="text-red-500 text-sm ml-4">{errorMessage?.slot}</span>
+                                                      </>
+                                                }
+
                                           </div>
                                           <div className={inputContainer}>
                                                 <Label>Gender <span className='text-red-500'>*</span></Label>

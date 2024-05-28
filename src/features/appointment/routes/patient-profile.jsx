@@ -7,7 +7,6 @@ import {
 import ProfileIcon from "../components/profile-icon";
 
 export function PatientProfile({ open, setOpen, patientData }) {
-      console.log("patientData: ", patientData);
       const style = "flex justify-between w-fit mb-3";
       const valueStyle = "text-gray-500 ml-2";
       return (

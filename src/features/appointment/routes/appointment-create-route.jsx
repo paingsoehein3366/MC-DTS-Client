@@ -35,8 +35,6 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       });
       const [date, setDate] = useState();
       const [errorMessage, setErrorMessage] = useState({});
-      console.log("errormessage: ", errorMessage);
-
       const { data } = useGetDoctorSlots(appointmentData.doctor);
       const useCreateMutation = useAppointmentCreate();
 
@@ -63,7 +61,6 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
 
       // Output: array of hasDuplicate dates;
       const hasDuplicates = getDate?.filter((date, index, self) => self.indexOf(date) == index);
-      console.log("hasDuplicates: ", hasDuplicates);
       const handleOnchange = (e) => {
             const { name, value } = e.target;
             setAppointmentData({ ...appointmentData, [name]: value })
@@ -72,9 +69,7 @@ const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
       const bookAppointment = async () => {
             const { message, key } = await createAppointmentValidate(appointmentData);
             setErrorMessage({ [key]: message });
-            console.log("Message: ", message);
             if (message) return;
-            console.log("bookAppointmentData: ", appointmentData);
             useCreateMutation.mutate(appointmentData, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
