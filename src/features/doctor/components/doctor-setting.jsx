@@ -40,7 +40,7 @@ const DoctorSetting = ({ doctorValue, doctorId }) => {
             useDoctorUpdateMutation.mutate({ id: doctorId, data: doctorInputValue }, {
                   onSuccess: () => {
                         queryClient.invalidateQueries({
-                              queryKey: ['slots']
+                              queryKey: ['doctors']
                         }),
                               toast('Doctor update success')
                   },

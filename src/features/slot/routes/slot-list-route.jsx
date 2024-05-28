@@ -26,7 +26,7 @@ const SlotListRoute = ({ doctorId }) => {
 
       // choose day decide
       const today = new Date().toISOString().split("T")[0];
-      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14))
+      const twoWeek = new Date(new Date().setDate(new Date().getDate() + 13))
             .toISOString()
             .split("T")[0];
 

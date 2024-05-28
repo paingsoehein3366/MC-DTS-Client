@@ -26,7 +26,7 @@ const SlotCreateRoute = ({ doctorId }) => {
 
 	// choose day decide
 	const today = new Date().toISOString().split("T")[0];
-	const twoWeek = new Date(new Date().setDate(new Date().getDate() + 14))
+	const twoWeek = new Date(new Date().setDate(new Date().getDate() + 13))
 		.toISOString()
 		.split("T")[0];
 
@@ -46,7 +46,6 @@ const SlotCreateRoute = ({ doctorId }) => {
 	const getSlot = filterSlots?.map((item) => {
 		const getStartHours = new Date(item.start_date).getHours();
 		const getStartMinutes = new Date(item.start_date).getMinutes();
-
 	})
 
 	// Add Slot
