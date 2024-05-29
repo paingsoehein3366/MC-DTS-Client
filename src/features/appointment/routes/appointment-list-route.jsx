@@ -42,7 +42,7 @@ const AppointmentListRoute = () => {
       // Filter
       const filterAppointments = data?.data?.data?.filter((appointment) => {
             const currentDate = new Date();
-            const endDate = new Date(appointment.slot.start_date);
+            const endDate = new Date(appointment.slot.end_date);
             return endDate >= currentDate;
       });
       const searchDoctorName = filterAppointments?.filter(item => (item.doctor._id).includes(searchDoctor));
