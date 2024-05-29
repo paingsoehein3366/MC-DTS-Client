@@ -3,7 +3,6 @@ import { useState } from "react";
 import { slotCreateSchema } from "../schema/slot-create-schema";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "react-toastify";
-import SlotListRoute from "./slot-list-route";
 import { useSlotCreate } from "../api/create-slot-api";
 import { useGetSlotDoctor } from "../api/get-slot-doctor-api";
 
@@ -35,7 +34,7 @@ const SlotCreateRoute = ({ doctorId }) => {
 	const endHour = parseInt(dateAndTimeData.endTime);
 	const endMinute = dateAndTimeData.endTime.split(":")[1];
 	// Filter Slots
-	const filterSlots = slots?.data?.filter((slot) => {
+	const filterSlots = slots?.data?.slots?.filter((slot) => {
 		const currentDate = new Date();
 		const startDate = new Date(slot.start_date);
 		const endDate = new Date(slot.end_date);
@@ -144,7 +143,6 @@ const SlotCreateRoute = ({ doctorId }) => {
 					</button>
 				</div>
 			</div>
-			<SlotListRoute doctorId={doctorId} dateAndTimeData={dateAndTimeData} />
 		</div>
 	);
 };

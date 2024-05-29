@@ -7,6 +7,8 @@ import { Loading } from "@/components";
 import DoctorSetting from "../components/doctor-setting";
 import SlotCreateRoute from "@/features/slot/routes/create-slot-route";
 import { useGetOneDoctor } from "../api/get-doctor-api";
+import { useEffect } from "react";
+import SlotListRoute from "@/features/slot/routes/slot-list-route";
 
 const DoctorProfileRoute = () => {
 	const paramsId = useParams().doctorId;
@@ -50,24 +52,22 @@ const DoctorProfileRoute = () => {
 							<div className="flex gap-4 border-b-2 pb-2">
 								<button
 									onClick={() => setToggle("slot")}
-									className={`${button} ${
-										toggle === "slot" && "bg-blue-500 text-white"
-									}`}
+									className={`${button} ${toggle === "slot" && "bg-blue-500 text-white"
+										}`}
 								>
 									Time Slots
 								</button>
 								<button
 									onClick={() => setToggle("setting")}
-									className={`${button} ${
-										toggle === "setting" && "bg-blue-500 text-white"
-									}`}
+									className={`${button} ${toggle === "setting" && "bg-blue-500 text-white"
+										}`}
 								>
 									Setting
 								</button>
 							</div>
 							{toggle === "slot" ?
-								<SlotCreateRoute doctorId={paramsId} />
-							:	<DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />}
+								<SlotListRoute doctorId={paramsId} />
+								: <DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />}
 						</div>
 					</div>
 				</Card>
