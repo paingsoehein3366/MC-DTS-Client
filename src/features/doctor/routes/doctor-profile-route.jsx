@@ -15,7 +15,7 @@ const DoctorProfileRoute = () => {
 
 	const button = "py-2 px-4 rounded-xl border";
 
-	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId)
+	const { data, isError, error, isLoading } = useGetOneDoctor(paramsId);
 
 	if (isError) {
 		return <h1>{error.message}</h1>;
@@ -34,36 +34,40 @@ const DoctorProfileRoute = () => {
 									src={`${doctorValue?.gender === "Male" ? Male : Female}`}
 									alt=""
 								/>
+								<div className="my-5 border-2 p-2 rounded-tl-2xl rounded-br-2xl">
+									<h1 className="text-gray-600 italic">Bio - {doctorValue?.bio}</h1>
+								</div>
 							</div>
 							<div className="space-y-3">
 								<h1 className="">Name - {doctorValue?.name}</h1>
 								<h1 className="">Specialist - {doctorValue?.specialist}</h1>
 								<h1 className="">Experiences - {doctorValue?.experiences}</h1>
 								<h1 className="">Gender - {doctorValue?.gender}</h1>
+								<h1 className="">Email - {doctorValue?.email}</h1>
 							</div>
 						</div>
 						<div className="">
 							<div className="flex gap-4 border-b-2 pb-2">
 								<button
 									onClick={() => setToggle("slot")}
-									className={`${button} ${toggle === "slot" && "bg-blue-500 text-white"
-										}`}
+									className={`${button} ${
+										toggle === "slot" && "bg-blue-500 text-white"
+									}`}
 								>
 									Time Slots
 								</button>
 								<button
 									onClick={() => setToggle("setting")}
-									className={`${button} ${toggle === "setting" && "bg-blue-500 text-white"
-										}`}
+									className={`${button} ${
+										toggle === "setting" && "bg-blue-500 text-white"
+									}`}
 								>
 									Setting
 								</button>
 							</div>
-							{toggle === 'slot' ?
+							{toggle === "slot" ?
 								<SlotCreateRoute doctorId={paramsId} />
-								:
-								<DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />
-							}
+							:	<DoctorSetting doctorValue={doctorValue} doctorId={paramsId} />}
 						</div>
 					</div>
 				</Card>
