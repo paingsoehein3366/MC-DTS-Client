@@ -109,15 +109,9 @@ const columns = [
 const ReportListRoute = () => {
 	const { data: reports } = useGetAllReports();
 
-	const filterAppointments = reports?.data?.filter((appointment) => {
-		const currentDate = new Date();
-		const endDate = new Date(appointment.slot.start_date);
-		return endDate >= currentDate;
-	});
-
 	const reportData = useMemo(
 		() =>
-			filterAppointments?.map((report) => ({
+			reports?.data?.map((report) => ({
 				name: report.username,
 				email: report.email,
 				age: report.age,
@@ -126,7 +120,7 @@ const ReportListRoute = () => {
 				doctor: report.doctor.name,
 				fees: "200",
 			})) || [],
-		[filterAppointments?.length],
+		[reports],
 	);
 
 	const [sorting, setSorting] = useState([]);
