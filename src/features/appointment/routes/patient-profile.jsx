@@ -41,7 +41,7 @@ export function PatientProfile({ open, setOpen, patientData }) {
                                           </div>
                                           <div className={style}>
                                                 <span>Fees:</span>
-                                                <span className={valueStyle}>$2500</span>
+                                                <span className={valueStyle}>$250</span>
                                           </div>
                                     </div>
                               </div>
