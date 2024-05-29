@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { useGetAllAppointments } from "@/features/appointment/api/appointment-get-api";
 import SlotCheckIcon from "./../components/slot-check-icon";
 import { useGetSlotDoctor } from "../api/get-slot-doctor-api";
+import SlotCreateRoute from './create-slot-route';
+import { queryClient } from '@/lib/react-query';
 
 const SlotListRoute = ({ doctorId }) => {
       const [editSlot, setEditSlot] = useState({});
@@ -19,8 +21,14 @@ const SlotListRoute = ({ doctorId }) => {
       const [open, setOpen] = useState(false);
       const [openRemove, setOpenRemove] = useState(false);
       const [showDatePicker, setShowDatePicker] = useState("hidden");
-
+      console.log("Doctor: ", doctorId);
+      useEffect(() => {
+            queryClient.invalidateQueries({
+                  queryKey: ['slots']
+            })
+      }, [doctorId]);
       const { data: slots } = useGetSlotDoctor(doctorId);
+      console.log("Slots: ", slots);
       const { data: appointments } = useGetAllAppointments();
 
       // choose day decide
@@ -30,7 +38,7 @@ const SlotListRoute = ({ doctorId }) => {
             .split("T")[0];
 
       // Filter Slots
-      const filterSlots = slots?.data?.filter((slot) => {
+      const filterSlots = slots?.data?.slots?.filter((slot) => {
             const currentDate = new Date();
             const startDate = new Date(slot.start_date);
             const endDate = new Date(slot.end_date);
@@ -66,12 +74,13 @@ const SlotListRoute = ({ doctorId }) => {
                   id: item._id,
             };
       });
+      console.log("getslot: ", getSlot);
       useEffect(() => {
             if (getSlot?.length) {
                   setAllSlots(getSlot);
                   setSearchSlot("");
             } else {
-                  setAllSlots();
+                  setAllSlots([]);
                   setSearchSlot("");
                   return;
             }
@@ -96,6 +105,7 @@ const SlotListRoute = ({ doctorId }) => {
       };
       return (
             <div>
+                  <SlotCreateRoute doctorId={doctorId} />
                   <div className="  mt-5 ">
                         {allSlots?.length ?
                               <button
@@ -138,7 +148,7 @@ const SlotListRoute = ({ doctorId }) => {
                         {allSlots?.length ?
                               !allSlots?.length ?
                                     <h1>not slot</h1>
-                                    : allSlots?.map((tag) => {
+                                    : getSlot?.map((tag) => {
                                           const isAppointment = checkSlotIsAppointmentId?.includes(
                                                 tag.id,
                                           );
