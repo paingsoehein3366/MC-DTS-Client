@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Male from "../../../assets/male.jpeg";
