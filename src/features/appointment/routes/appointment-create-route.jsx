@@ -21,6 +21,7 @@ import AppointmentSelectBox from '../components/appointment-select-box';
 import { createAppointmentValidate } from '../schema/appointment-create-schema';
 
 const AppointmentCreateRoute = ({ open, setOpen, doctorData }) => {
+
       const [appointmentData, setAppointmentData] = useState({
             username: "",
             email: "",

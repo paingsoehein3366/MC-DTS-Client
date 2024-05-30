@@ -33,13 +33,6 @@ const SlotCreateRoute = ({ doctorId }) => {
 	const startMinute = dateAndTimeData.startTime.split(":")[1];
 	const endHour = parseInt(dateAndTimeData.endTime);
 	const endMinute = dateAndTimeData.endTime.split(":")[1];
-	// Filter Slots
-	const filterSlots = slots?.data?.slots?.filter((slot) => {
-		const currentDate = new Date();
-		const startDate = new Date(slot.start_date);
-		const endDate = new Date(slot.end_date);
-		return startDate >= currentDate && endDate >= currentDate;
-	});
 
 	// Add Slot
 	const AddSlot = async () => {

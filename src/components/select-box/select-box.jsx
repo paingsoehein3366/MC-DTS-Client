@@ -5,7 +5,7 @@ import {
       SelectValue
 } from "@/components/ui/select";
 
-const AppointmentSelectBox = ({ label, placeholder, errorMessage, onValueChange, SelectItem, className }) => {
+const SelectBox = ({ label, placeholder, errorMessage, onValueChange, SelectItem, className }) => {
       return (
             <div className="flex flex-col">
                   <Label>{label} <span className='text-red-500'>*</span></Label>
@@ -22,4 +22,4 @@ const AppointmentSelectBox = ({ label, placeholder, errorMessage, onValueChange,
       )
 };
 
-export default AppointmentSelectBox;
+export default SelectBox;

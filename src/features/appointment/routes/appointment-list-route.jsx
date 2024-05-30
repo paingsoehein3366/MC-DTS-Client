@@ -63,7 +63,7 @@ const AppointmentListRoute = () => {
                         </Select>
                         <Button
                               className="rounded bg-[#386cf0] text-[#fff] hover:bg-[#668ae3] active:bg-[#386cf0] px-14"
-                              onClick={() => setOpenAppointment(true)}
+                              onClick={() => setPatientUpdateOpen(true)}
                         >Appointment</Button>
                   </div>
                   <Table>
@@ -112,7 +112,7 @@ const AppointmentListRoute = () => {
                                                                         className="text-blue-400 hover:bg-blue-400 rounded-[20px] hover:text-white p-1 w-8 h-8"
                                                                         onClick={() => {
                                                                               setPatientUpdateOpen(true);
-                                                                              setPatientDate({ date, time: `${startDate}:${endDate}` });
+                                                                              setPatientDate({ date, time: `${startDate} - ${endDate}` });
                                                                               setPatientData(item);
                                                                         }}
                                                                   >
@@ -163,7 +163,7 @@ const AppointmentListRoute = () => {
                                                                   className="text-blue-400 hover:bg-blue-400 rounded-[20px] hover:text-white p-1 w-8 h-8"
                                                                   onClick={() => {
                                                                         setPatientUpdateOpen(true);
-                                                                        setPatientDate({ date, time: `${startDate}:${endDate}` });
+                                                                        setPatientDate({ date, time: `${startDate} - ${endDate}` });
                                                                         setPatientData(item);
                                                                   }}
                                                             >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Label } from "@/components/ui/label"
 
-const AppointmentCreateInputTag = ({ handleOnchange, label, name, placeholder, errorMessage, className }) => {
+const AppointmentCreateInputTag = ({ handleOnchange, label, name, placeholder, errorMessage, className, defaultValue }) => {
   return (
     <div className="flex flex-col">
       <Label>{label}<span className='text-red-500'>*</span></Label>
@@ -11,6 +11,7 @@ const AppointmentCreateInputTag = ({ handleOnchange, label, name, placeholder, e
         placeholder={placeholder}
         name={name}
         onChange={handleOnchange}
+        defaultValue={defaultValue}
       />
       <span className="text-red-500 text-sm">{errorMessage}</span>
     </div>
