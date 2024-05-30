@@ -4,7 +4,7 @@ import {
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
-	useReactTable,
+	useReactTable
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 
@@ -14,7 +14,7 @@ import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
-	DropdownMenuTrigger,
+	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,11 +23,11 @@ import {
 	TableCell,
 	TableHead,
 	TableHeader,
-	TableRow,
+	TableRow
 } from "@/components/ui/table";
-import { useGetAllReports } from "../api";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CSVLink } from "react-csv";
+import { useGetAllReports } from "../api";
 
 const columns = [
 	{

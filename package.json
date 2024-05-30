@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "dayjs": "^1.11.11",
     "lucide-react": "^0.378.0",
     "react-csv": "^2.2.2",
     "react-date-range": "^2.0.1",
